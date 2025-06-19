@@ -1,7 +1,9 @@
-from typing import Dict, Sequence
+import argparse
+from typing import Dict, List, Sequence
 from sqlalchemy.engine import Row
 
 from src.core import db_connections
+from utils import logger
 
 from .migrate_base import BaseMigrator
 
@@ -15,6 +17,30 @@ class InputsFertilizersNutrientMigrator(BaseMigrator):
     @classmethod
     def get_description(cls) -> str:
         return "Migrate inputs_fertilizers_nutrient data to Neo4j"
+
+    @classmethod
+    def add_custom_arguments(cls, parser: argparse.ArgumentParser) -> None:
+        parser.add_argument(
+            "--create-indexes",
+            action="store_true",
+            help="create relationship indexes for production_crops_livestock data",
+        )
+
+    @classmethod
+    def handle_custom_arguments(cls, migrator: BaseMigrator, args: argparse.Namespace) -> bool:
+        if args.create_indexes:
+            if isinstance(migrator, InputsFertilizersNutrientMigrator):
+                migrator.create_indexes()
+                return True  # Skip normal migration
+        return False
+
+    def get_index_queries(self) -> list[str]:
+        """Get index creation queries."""
+        return [
+            "CREATE INDEX inputs_fertilizers_nutrient_year IF NOT EXISTS FOR ()-[r:USES_NUTRIENT]-() ON (r.year)",
+            "CREATE INDEX inputs_fertilizers_nutrient_element IF NOT EXISTS FOR ()-[r:USES_NUTRIENT]-() ON (r.element_code_id)",
+            "CREATE INDEX inputs_fertilizers_nutrient_year_element IF NOT EXISTS FOR ()-[r:USES_NUTRIENT]-() ON (r.year, r.element_code_id)",
+        ]
 
     def get_migration_query(self) -> str:
         return """

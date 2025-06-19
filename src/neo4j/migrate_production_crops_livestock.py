@@ -20,16 +20,26 @@ class ProductionCropsLivestockMigrator(BaseMigrator):
     @classmethod
     def add_custom_arguments(cls, parser: argparse.ArgumentParser) -> None:
         parser.add_argument(
-            "--cleanup-duplicates", action="store_true", help="Clean up existing duplicates before migration"
+            "--create-indexes",
+            action="store_true",
+            help="create relationship indexes for production_crops_livestock data",
         )
 
     @classmethod
     def handle_custom_arguments(cls, migrator: BaseMigrator, args: argparse.Namespace) -> bool:
-        if args.cleanup_duplicates:
+        if args.create_indexes:
             if isinstance(migrator, ProductionCropsLivestockMigrator):
-                migrator.cleanup_duplicates()
+                migrator.create_indexes()
                 return True  # Skip normal migration
         return False
+
+    def get_index_queries(self) -> list[str]:
+        """Get index creation queries."""
+        return [
+            "CREATE INDEX production_crops_livestock_year IF NOT EXISTS FOR ()-[r:PRODUCES]-() ON (r.year)",
+            "CREATE INDEX production_crops_livestock_element IF NOT EXISTS FOR ()-[r:PRODUCES]-() ON (r.element_code_id)",
+            "CREATE INDEX production_crops_livestock_year_element IF NOT EXISTS FOR ()-[r:PRODUCES]-() ON (r.year, r.element_code_id)",
+        ]
 
     def get_count_query(self) -> str:
         """Override to count only records with notes for update mode."""
@@ -181,26 +191,6 @@ class ProductionCropsLivestockMigrator(BaseMigrator):
                 LIMIT 5
             """,
         }
-
-    def cleanup_duplicates(self) -> None:
-        """Optional: Remove existing duplicate relationships."""
-        logger.info("Cleaning up duplicate relationships...")
-
-        with db_connections.neo4j_session() as session:
-            result = session.run(
-                """
-                MATCH (c:Country)-[p:PRODUCES]->(i:Item)
-                WITH c, i, p.year as year, p.element_code_id as element, 
-                     collect(p) as rels, count(*) as rel_count
-                WHERE rel_count > 1
-                UNWIND rels[1..] as duplicate_rel
-                DELETE duplicate_rel
-                RETURN count(*) as deleted
-                """
-            )
-
-            deleted = result.single()["deleted"]
-            logger.info(f"Deleted {deleted:,} duplicate relationships")
 
 
 if __name__ == "__main__":

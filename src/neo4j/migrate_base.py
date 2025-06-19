@@ -35,6 +35,11 @@ class BaseMigrator(ABC):
         """
 
     @abstractmethod
+    def get_index_queries(self) -> list[str]:
+        """Return SQL query to fetch records for migration with LIMIT/OFFSET."""
+        pass
+
+    @abstractmethod
     def get_migration_query(self) -> str:
         """Return SQL query to fetch records for migration with LIMIT/OFFSET."""
         pass
@@ -122,6 +127,15 @@ class BaseMigrator(ABC):
             logger.error(f"Unexpected error at offset {offset}: {e}")
             logger.info(f"Resume with: --offset {offset}")
             raise MigrationError(f"Migration failed at offset {offset}") from e
+
+    def create_indexes(self):
+        """Create relationship indexes"""
+
+        with db_connections.neo4j_session() as session:
+            for query in self.get_index_queries():
+                session.run(query)
+                logger.info(f"Created index: {query.split(' ')[2]}")
+            logger.success(f"Created {self.source_dataset} relationship indexes")
 
     def log_progress(self, offset: int, total_records: int, pct_complete: float) -> None:
         """Log migration progress. Override for custom logging."""
@@ -231,15 +245,16 @@ class BaseMigrator(ABC):
                 return
 
             migrator.migrate(start_offset=args.offset, mode=args.mode)
+            migrator.create_indexes()
             migrator.verify_migration()
 
             if args.mode == "create":
-                logger.info(f"Migration complete! Created {migrator.relationships_created:,} relationships")
+                logger.success(f"Migration complete! Created {migrator.relationships_created:,} relationships")
             else:
-                logger.info(f"Update complete! Updated {migrator.relationships_updated:,} relationships")
+                logger.success(f"Update complete! Updated {migrator.relationships_updated:,} relationships")
 
         except KeyboardInterrupt:
-            logger.info("\nMigration cancelled by user")
+            logger.warning("\nMigration cancelled by user")
             return
         except MigrationError as e:
             logger.error(f"Migration failed: {e}")

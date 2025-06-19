@@ -64,27 +64,38 @@ class Neo4jSchema:
     def setup_indexes(self) -> None:
         """Create indexes for common queries."""
 
-        # Name lookups
+        # Core node lookups
         self.create_index("country_name", "CREATE INDEX country_name IF NOT EXISTS FOR (c:Country) ON (c.name)")
+        self.create_index(
+            "country_area_code", "CREATE INDEX country_area_code IF NOT EXISTS FOR (c:Country) ON (c.area_code)"
+        )
+        self.create_index(
+            "country_source_dataset",
+            "CREATE INDEX country_source_dataset IF NOT EXISTS FOR (c:Country) ON (c.source_dataset)",
+        )
+        self.create_index(
+            "country_area_source",
+            "CREATE INDEX country_area_source IF NOT EXISTS FOR (c:Country) ON (c.area_code, c.source_dataset)",
+        )
 
         self.create_index("item_name", "CREATE INDEX item_name IF NOT EXISTS FOR (i:Item) ON (i.name)")
-
-        # Type/category indexes
-        self.create_index("country_type", "CREATE INDEX country_type IF NOT EXISTS FOR (c:Country) ON (c.type)")
-
-        # Relationship indexes
+        self.create_index("item_item_code", "CREATE INDEX item_item_code IF NOT EXISTS FOR (i:Item) ON (i.item_code)")
         self.create_index(
-            "produces_year", "CREATE INDEX produces_year IF NOT EXISTS FOR ()-[r:PRODUCES]-() ON (r.year)"
-        )
-
-        self.create_index("trades_year", "CREATE INDEX trades_year IF NOT EXISTS FOR ()-[r:TRADES_WITH]-() ON (r.year)")
-
-        self.create_index(
-            "country_id_source",
-            "CREATE INDEX country_id_source IF NOT EXISTS FOR (c:Country) ON (c.id, c.source_dataset)",
+            "item_source_dataset", "CREATE INDEX item_source_dataset IF NOT EXISTS FOR (i:Item) ON (i.source_dataset)"
         )
         self.create_index(
-            "item_id_source", "CREATE INDEX item_id_source IF NOT EXISTS FOR (i:Item) ON (i.id, i.source_dataset)"
+            "item_code_source",
+            "CREATE INDEX item_code_source IF NOT EXISTS FOR (i:Item) ON (i.item_code, i.source_dataset)",
+        )
+
+        self.create_index("element_name", "CREATE INDEX element_name IF NOT EXISTS FOR (e:Element) ON (e.name)")
+        self.create_index(
+            "element_element_code",
+            "CREATE INDEX element_element_code IF NOT EXISTS FOR (e:Element) ON (e.element_code)",
+        )
+        self.create_index(
+            "element_source_dataset",
+            "CREATE INDEX element_source_dataset IF NOT EXISTS FOR (e:Element) ON (e.source_dataset)",
         )
 
     def setup_all(self) -> None:

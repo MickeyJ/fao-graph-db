@@ -175,6 +175,58 @@ class ReferenceDataMigrator:
 
         self.nodes_created["flags"] = len(flags)
 
+    def create_month_nodes(self) -> None:
+        """Create Month nodes for temporal queries."""
+        logger.info("Creating month nodes...")
+
+        # Get all year/month combinations from prices table
+        query = text(
+            """
+            SELECT DISTINCT year, months_code, months
+            FROM prices
+            WHERE months_code IN ('7001','7002','7003','7004','7005','7006',
+                                '7007','7008','7009','7010','7011','7012')
+            AND year IS NOT NULL
+            ORDER BY year, months_code
+        """
+        )
+
+        with db_connections.pg_session() as pg_session:
+            result = pg_session.execute(query)
+            months = result.fetchall()
+
+        logger.info(f"Creating {len(months)} month nodes...")
+
+        with db_connections.neo4j_session() as neo4j_session:
+            for i in range(0, len(months), self.batch_size):
+                batch = months[i : i + self.batch_size]
+
+                neo4j_session.run(
+                    """
+                    UNWIND $months as month
+                    MERGE (m:Month {year: month.year, month_code: month.months_code})
+                    ON CREATE SET 
+                        m.month = month.months,
+                        m.month_number = toInteger(substring(month.months_code, 2)) - 7000,
+                        m.quarter = CASE 
+                            WHEN month.months_code IN ['7001', '7002', '7003'] THEN 'Q1'
+                            WHEN month.months_code IN ['7004', '7005', '7006'] THEN 'Q2'
+                            WHEN month.months_code IN ['7007', '7008', '7009'] THEN 'Q3'
+                            WHEN month.months_code IN ['7010', '7011', '7012'] THEN 'Q4'
+                        END
+                    
+                    // Connect to Year node
+                    WITH m, month
+                    MATCH (y:Year {year: month.year})
+                    MERGE (y)-[:HAS_MONTH]->(m)
+                """,
+                    months=[dict(m._mapping) for m in batch],
+                )
+
+                logger.info(f"Created {min(i + self.batch_size, len(months))}/{len(months)} months")
+
+        self.nodes_created["months"] = len(months)
+
     def create_year_nodes(self) -> None:
         """Create Year nodes for temporal queries."""
         logger.info("Creating year nodes...")
@@ -259,6 +311,7 @@ class ReferenceDataMigrator:
             self.migrate_items()
             self.migrate_elements()
             self.migrate_flags()
+            self.create_month_nodes()
             self.create_year_nodes()
             self.create_reference_links()
 

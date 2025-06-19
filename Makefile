@@ -120,6 +120,13 @@ neo4j-migrate-inputs-fertilizers-nutrient-local:
 	$(MAKE) db-use-local
 	$(MAKE) INTERNAL-neo4j-migrate-inputs-fertilizers-nutrient
 
+neo4j-migrate-prices-local:
+	$(MAKE) db-use-local
+	$(MAKE) INTERNAL-neo4j-migrate-prices
+
+INTERNAL-neo4j-migrate-prices:
+	$(ACTIVATE) $(PYTHON) -m src.neo4j.migrate_prices $(ARGS)
+
 INTERNAL-neo4j-migrate-inputs-fertilizers-nutrient:
 	$(ACTIVATE) $(PYTHON) -m src.neo4j.migrate_inputs_fertilizers_nutrient $(ARGS)
 
