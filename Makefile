@@ -32,6 +32,7 @@ endif
 		db-use-remote db-use-local db-use-local-admin \
 		db-test-connection-local neo4j-create-schema-local neo4j-reset-local \
 		neo4j-migrate-reference-data-local neo4j-migrate-production-crops-livestock-local \
+		neo4j-migrate-inputs-fertilizers-nutrient-local \
 		INTERNAL-neo4j-migrate-production-crops-livestock INTERNAL-neo4j-reset \
 		INTERNAL-neo4j-migrate-reference-data INTERNAL-db-test-connection \
 		INTERNAL-neo4j-create-schema db-explore db-visual-phase1-all db-visual-phase1 \
@@ -114,6 +115,13 @@ neo4j-migrate-reference-data-local:
 neo4j-migrate-production-crops-livestock-local:
 	$(MAKE) db-use-local
 	$(MAKE) INTERNAL-neo4j-migrate-production-crops-livestock
+
+neo4j-migrate-inputs-fertilizers-nutrient-local:
+	$(MAKE) db-use-local
+	$(MAKE) INTERNAL-neo4j-migrate-inputs-fertilizers-nutrient
+
+INTERNAL-neo4j-migrate-inputs-fertilizers-nutrient:
+	$(ACTIVATE) $(PYTHON) -m src.neo4j.migrate_inputs_fertilizers_nutrient $(ARGS)
 
 INTERNAL-neo4j-migrate-production-crops-livestock:
 	$(ACTIVATE) $(PYTHON) -m src.neo4j.migrate_production_crops_livestock $(ARGS)

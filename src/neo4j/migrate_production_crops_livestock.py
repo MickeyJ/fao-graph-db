@@ -1,113 +1,105 @@
 import argparse
-from typing import Sequence
+from typing import Dict, Sequence
 from sqlalchemy.engine import Row
-from sqlalchemy import text
 
 from src.core import db_connections
 from utils import logger
+from .migrate_base import BaseMigrator
 
 
-class ProductionCropsLivestockMigrator:
+class ProductionCropsLivestockMigrator(BaseMigrator):
     """Migrate production_crops_livestock to Neo4j relationships."""
 
     def __init__(self):
-        self.batch_size = 5000
-        self.relationships_created = 0
-        self.relationships_updated = 0
-        self.source_dataset = "production_crops_livestock"
+        super().__init__("production_crops_livestock")
 
-    def migrate(self, start_offset: int = 0) -> None:
-        """Main migration entry point with resume capability."""
-        logger.info(f"Starting {self.source_dataset} migration from offset {start_offset:,}...")
-        logger.info(f"Using batch size: {self.batch_size}")  # Add this
+    @classmethod
+    def get_description(cls) -> str:
+        return "Migrate production data to Neo4j"
 
-        # Count ALL records
-        count_query = text(
-            """
-            SELECT COUNT(*) as total
-            FROM production_crops_livestock pcl
-            WHERE pcl.value > 0
-                AND pcl.value IS NOT NULL
-                AND pcl.value != 'NaN'
-        """
+    @classmethod
+    def add_custom_arguments(cls, parser: argparse.ArgumentParser) -> None:
+        parser.add_argument(
+            "--cleanup-duplicates", action="store_true", help="Clean up existing duplicates before migration"
         )
 
-        with db_connections.pg_session() as session:
-            total_records = session.execute(count_query).scalar() or 0
-            logger.info(f"Total production records to migrate: {total_records:,}")
+    @classmethod
+    def handle_custom_arguments(cls, migrator: BaseMigrator, args: argparse.Namespace) -> bool:
+        if args.cleanup_duplicates:
+            if isinstance(migrator, ProductionCropsLivestockMigrator):
+                migrator.cleanup_duplicates()
+                return True  # Skip normal migration
+        return False
 
-            if start_offset > 0:
-                logger.info(
-                    f"Resuming from offset {start_offset:,} ({start_offset/total_records*100:.1f}% already done)"
-                )
+    def get_count_query(self) -> str:
+        """Override to count only records with notes for update mode."""
+        # Check if we're in update mode by looking at sys.argv (bit hacky but works)
+        import sys
 
-        # FIXED: Added more columns to ORDER BY for deterministic ordering
-        query = text(
+        if "--mode" in sys.argv and "update" in sys.argv:
+            return f"""
+                SELECT COUNT(*) as total
+                FROM {self.source_dataset} sds
+                WHERE sds.value > 0
+                  AND sds.note IS NOT NULL 
+                  AND sds.note != ''
             """
-            SELECT 
-                pcl.area_code_id,
-                pcl.item_code_id,
-                pcl.element_code_id,
-                pcl.flag_id,
-                pcl.year,
-                pcl.value,
-                pcl.unit
-            FROM production_crops_livestock pcl
-            JOIN area_codes ac ON ac.id = pcl.area_code_id
-            JOIN item_codes ic ON ic.id = pcl.item_code_id
-            JOIN elements e ON e.id = pcl.element_code_id
-            WHERE pcl.value > 0
-                AND pcl.value IS NOT NULL
-                AND pcl.value != 'NaN'
-            ORDER BY pcl.year, pcl.area_code_id, pcl.item_code_id, pcl.element_code_id, pcl.id
-            LIMIT :limit OFFSET :offset
-        """
-        )
+        return super().get_count_query()
 
-        offset = start_offset
+    def get_migration_query(self) -> str:
+        # For updates, we only need records with notes
+        import sys
 
-        while offset < total_records:
-            with db_connections.pg_session() as pg_session:
-                # Fetch batch
-                result = pg_session.execute(
-                    query,
-                    {"limit": self.batch_size, "offset": offset},
-                )
-                records = result.fetchall()
+        if "--mode" in sys.argv and "update" in sys.argv:
+            return """
+                SELECT 
+                    pcl.area_code_id,
+                    pcl.item_code_id,
+                    pcl.element_code_id,
+                    pcl.year,
+                    pcl.note
+                FROM production_crops_livestock pcl
+                WHERE pcl.value > 0
+                  AND pcl.note IS NOT NULL 
+                  AND pcl.note != ''
+                ORDER BY pcl.year, pcl.area_code_id, pcl.item_code_id, pcl.element_code_id, pcl.id
+                LIMIT :limit OFFSET :offset
+            """
+        else:
+            return """
+                SELECT 
+                    pcl.area_code_id,
+                    pcl.item_code_id,
+                    pcl.element_code_id,
+                    pcl.flag_id,
+                    pcl.year,
+                    pcl.value,
+                    pcl.unit,
+                    pcl.note
+                FROM production_crops_livestock pcl
+                JOIN area_codes ac ON ac.id = pcl.area_code_id
+                JOIN item_codes ic ON ic.id = pcl.item_code_id
+                JOIN elements e ON e.id = pcl.element_code_id
+                WHERE pcl.value > 0
+                ORDER BY pcl.year, pcl.area_code_id, pcl.item_code_id, pcl.element_code_id, pcl.id
+                LIMIT :limit OFFSET :offset
+            """
 
-                if not records:
-                    break
-
-                # Process batch with deduplication
-                self._create_production_relationships(records)
-                offset += len(records)
-
-                # Enhanced progress logging
-                pct_complete = offset / total_records * 100
-                logger.info(
-                    f"Progress: {offset:,}/{total_records:,} records ({pct_complete:.1f}%) | "
-                    f"Created: {self.relationships_created:,} | Updated: {self.relationships_updated:,}"
-                )
-
-    def _create_production_relationships(self, records) -> None:
+    def create_relationships(self, records: Sequence[Row]) -> None:
         """Create PRODUCES relationships with better batching."""
+        # Use helper method for transformation
+        field_mapping = {
+            "area_code_id": "area_code_id",
+            "item_code_id": "item_code_id",
+            "element_code_id": "element_code_id",
+            "flag_id": "flag_id",
+            "year": "year",
+            "value": "value",
+            "unit": "unit",
+            "note": "note",
+        }
+        relationships = self.transform_records_for_neo4j(records, field_mapping)
 
-        # Transform ALL records at once
-        relationships = []
-        for record in records:
-            relationships.append(
-                {
-                    "area_code_id": record.area_code_id,
-                    "item_code_id": record.item_code_id,
-                    "element_code_id": record.element_code_id,
-                    "flag_id": record.flag_id,
-                    "year": record.year,
-                    "value": float(record.value),
-                    "unit": record.unit,
-                }
-            )
-
-        # Single transaction, single query for ALL records
         with db_connections.neo4j_session() as session:
             with session.begin_transaction() as tx:
                 result = tx.run(
@@ -120,10 +112,11 @@ class ProductionCropsLivestockMigrator:
                         element_code_id: rel.element_code_id,
                         value: rel.value,
                         unit: rel.unit,
+                        note: rel.note,
                         flag_id: rel.flag_id
                     }]->(i)
                     RETURN count(p) as processed
-                """,
+                    """,
                     rels=relationships,
                     source_dataset=self.source_dataset,
                 )
@@ -132,58 +125,68 @@ class ProductionCropsLivestockMigrator:
                 self.relationships_created += processed
                 tx.commit()
 
-    def verify_migration(self) -> None:
-        """Verify the migration completed successfully."""
-        with db_connections.neo4j_session() as session:
-            # Total count
-            result = session.run(
-                """
-                MATCH ()-[p:PRODUCES]->()
-                RETURN count(p) as total_relationships
-            """
+    def update_relationships(self, records: Sequence[Row]) -> None:
+        """Update existing PRODUCES relationships with notes."""
+        updates = []
+        for record in records:
+            updates.append(
+                {
+                    "area_code_id": record.area_code_id,
+                    "item_code_id": record.item_code_id,
+                    "element_code_id": record.element_code_id,
+                    "year": record.year,
+                    "note": record.note,
+                }
             )
 
-            total = result.single()["total_relationships"]
-            logger.info(f"Verification complete: {total:,} PRODUCES relationships exist")
+        with db_connections.neo4j_session() as session:
+            with session.begin_transaction() as tx:
+                result = tx.run(
+                    """
+                    UNWIND $updates as upd
+                    MATCH (c:Country {id: upd.area_code_id, source_dataset: $source_dataset})
+                          -[p:PRODUCES {
+                              year: upd.year,
+                              element_code_id: upd.element_code_id
+                          }]->
+                          (i:Item {id: upd.item_code_id, source_dataset: $source_dataset})
+                    SET p.note = upd.note
+                    RETURN count(p) as updated
+                    """,
+                    updates=updates,
+                    source_dataset=self.source_dataset,
+                )
 
-            # Check for duplicates
-            result = session.run(
-                """
+                updated = result.single()["updated"]
+                self.relationships_updated += updated
+                tx.commit()
+
+    def get_verification_queries(self) -> Dict[str, str]:
+        return {
+            "total_count": """
+                MATCH ()-[p:PRODUCES]->()
+                RETURN count(p) as total_relationships
+            """,
+            "duplicate_check": """
                 MATCH (c:Country)-[p:PRODUCES]->(i:Item)
                 WITH c, i, p.year as year, p.element_code_id as element, count(*) as rel_count
                 WHERE rel_count > 1
                 RETURN count(*) as duplicate_combinations
-                """
-            )
-
-            duplicates = result.single()["duplicate_combinations"]
-            if duplicates > 0:
-                logger.warning(f"Found {duplicates:,} duplicate relationship combinations")
-            else:
-                logger.info("No duplicate relationships found!")
-
-            # Sample check - USA wheat production
-            result = session.run(
-                """
+            """,
+            "sample_usa_wheat": """
                 MATCH (c:Country {area_code: '231', source_dataset: $source_dataset})-[p:PRODUCES]->(i:Item)
                 WHERE i.item_code = '15'  // Wheat
                   AND p.year = 2022
                 RETURN c.name, i.name, p.value, p.unit
                 LIMIT 5
             """,
-                source_dataset=self.source_dataset,
-            )
-
-            logger.info("Sample USA wheat production:")
-            for record in result:
-                logger.info(f"  {record['c.name']} -> {record['i.name']}: {record['p.value']} {record['p.unit']}")
+        }
 
     def cleanup_duplicates(self) -> None:
         """Optional: Remove existing duplicate relationships."""
         logger.info("Cleaning up duplicate relationships...")
 
         with db_connections.neo4j_session() as session:
-            # Delete duplicates keeping the one with lowest internal ID
             result = session.run(
                 """
                 MATCH (c:Country)-[p:PRODUCES]->(i:Item)
@@ -200,35 +203,5 @@ class ProductionCropsLivestockMigrator:
             logger.info(f"Deleted {deleted:,} duplicate relationships")
 
 
-def main():
-    """Run the production migration with command-line options."""
-    parser = argparse.ArgumentParser(description="Migrate production data to Neo4j")
-    parser.add_argument("--offset", type=int, default=0, help="Starting offset for resuming migration")
-    parser.add_argument("--batch-size", type=int, default=5000, help="Batch size for processing")
-    parser.add_argument(
-        "--cleanup-duplicates", action="store_true", help="Clean up existing duplicates before migration"
-    )
-    args = parser.parse_args()
-
-    migrator = ProductionCropsLivestockMigrator()
-    migrator.batch_size = args.batch_size
-
-    try:
-        if args.cleanup_duplicates:
-            migrator.cleanup_duplicates()
-        else:
-            migrator.migrate(start_offset=args.offset)
-            migrator.verify_migration()
-
-            logger.info(
-                f"Migration complete! Created {migrator.relationships_created:,} new relationships, "
-                f"updated {migrator.relationships_updated:,} existing ones"
-            )
-
-    except Exception as e:
-        logger.error(f"Migration failed: {e}")
-        raise
-
-
 if __name__ == "__main__":
-    main()
+    ProductionCropsLivestockMigrator.main()
