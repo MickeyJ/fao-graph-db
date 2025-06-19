@@ -1,5 +1,5 @@
 from sqlalchemy import text
-from src.core import db_connections
+from src.core.db_connections import db_connections
 
 # Test PostgreSQL
 with db_connections.pg_session() as session:

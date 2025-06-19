@@ -79,6 +79,14 @@ class Neo4jSchema:
 
         self.create_index("trades_year", "CREATE INDEX trades_year IF NOT EXISTS FOR ()-[r:TRADES_WITH]-() ON (r.year)")
 
+        self.create_index(
+            "country_id_source",
+            "CREATE INDEX country_id_source IF NOT EXISTS FOR (c:Country) ON (c.id, c.source_dataset)",
+        )
+        self.create_index(
+            "item_id_source", "CREATE INDEX item_id_source IF NOT EXISTS FOR (i:Item) ON (i.id, i.source_dataset)"
+        )
+
     def setup_all(self) -> None:
         """Run complete schema setup."""
         logger.info("Starting Neo4j schema setup...")

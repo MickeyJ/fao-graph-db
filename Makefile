@@ -28,12 +28,16 @@ else
     PYTHON = python
 endif
 
-.PHONY: all venv env-status install install-update install-requirements \
-	install-init db-use-remote db-use-local db-use-local-admin \
-	db-test-connection-local neo4j-create-schema-local neo4j-migrate-reference-data-local \
-	INTERNAL-neo4j-migrate-reference-data INTERNAL-db-test-connection INTERNAL-neo4j-create-schema \
-	db-explore db-visual-phase \
-	$(filter-out run-explorer,$(MAKECMDGOALS))
+.PHONY: venv env-status install-init install install-update install-requirements \
+		db-use-remote db-use-local db-use-local-admin \
+		db-test-connection-local neo4j-create-schema-local neo4j-reset-local \
+		neo4j-migrate-reference-data-local neo4j-migrate-production-crops-livestock-local \
+		INTERNAL-neo4j-migrate-production-crops-livestock INTERNAL-neo4j-reset \
+		INTERNAL-neo4j-migrate-reference-data INTERNAL-db-test-connection \
+		INTERNAL-neo4j-create-schema db-explore db-visual-phase1-all db-visual-phase1 \
+		db-size-info-local create-db-local drop-db-local-admin clear-all-tables-local \
+		db-size show-all-tables NO-DIRECT-USE-create-db NO-DIRECT-USE-drop-db \
+		NO-DIRECT-USE-reset-db NO-DIRECT-USE-clear-all-tables \
 
 
 
@@ -99,13 +103,20 @@ neo4j-create-schema-local:
 	$(MAKE) db-use-local
 	$(MAKE) INTERNAL-neo4j-create-schema
 
+neo4j-reset-local:
+	$(MAKE) db-use-local
+	$(MAKE) INTERNAL-neo4j-reset
+
 neo4j-migrate-reference-data-local:
 	$(MAKE) db-use-local
 	$(MAKE) INTERNAL-neo4j-migrate-reference-data
 
-neo4j-reset-local:
+neo4j-migrate-production-crops-livestock-local:
 	$(MAKE) db-use-local
-	$(MAKE) INTERNAL-neo4j-reset
+	$(MAKE) INTERNAL-neo4j-migrate-production-crops-livestock
+
+INTERNAL-neo4j-migrate-production-crops-livestock:
+	$(ACTIVATE) $(PYTHON) -m src.neo4j.migrate_production_crops_livestock $(ARGS)
 
 INTERNAL-neo4j-reset:
 	$(ACTIVATE) $(PYTHON) -m src.neo4j.schema reset

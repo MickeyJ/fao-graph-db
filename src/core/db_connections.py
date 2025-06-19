@@ -8,7 +8,7 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from utils import logger
-from src.core import settings
+from src.core.settings import settings
 
 
 class DatabaseConnections:

@@ -254,14 +254,19 @@ class ReferenceDataMigrator:
 
     def migrate_all(self) -> None:
         """Run all reference data migrations."""
-        self.migrate_countries()
-        self.migrate_items()
-        self.migrate_elements()
-        self.migrate_flags()
-        self.create_year_nodes()
-        self.create_reference_links()
+        try:
+            self.migrate_countries()
+            self.migrate_items()
+            self.migrate_elements()
+            self.migrate_flags()
+            self.create_year_nodes()
+            self.create_reference_links()
 
-        logger.info(f"Reference data migration complete! Created: {self.nodes_created}")
+            logger.info(f"Reference data migration complete! Created: {self.nodes_created}")
+
+        except Exception as e:
+            logger.error(f"Migration failed: {e}")
+            raise
 
 
 if __name__ == "__main__":
