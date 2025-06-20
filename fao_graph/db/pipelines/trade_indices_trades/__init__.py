@@ -1,0 +1,1 @@
+"""Migration pipeline for trade_indices TRADES relationships"""

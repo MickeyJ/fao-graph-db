@@ -69,7 +69,7 @@ class PricesMigrator(BaseMigrator):
             LIMIT :limit OFFSET :offset
         """
 
-    def create_relationships(self, records: Sequence[Row]) -> None:
+    def create(self, records: Sequence[Row]) -> None:
         """Create HAS_PRICE relationships."""
         field_mapping = {
             "area_code_id": "area_code_id",

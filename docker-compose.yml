@@ -1,20 +1,37 @@
 
+# services:
+#   neo4j:
+#     image: neo4j:5-enterprise
+#     container_name: neo4j-fao
+#     ports:
+#       - "7474:7474"  # HTTP
+#       - "7687:7687"  # Bolt
+#     volumes:
+#       - ./neo4j-data/data:/data
+#       - ./neo4j-data/logs:/logs
+#       - ./neo4j-data/import:/var/lib/neo4j/import
+#       - ./neo4j-data/plugins:/plugins
+#     environment:
+#       - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD}
+#       - NEO4J_PLUGINS=["apoc", "graph-data-science"]
+#       - NEO4J_server_memory_pagecache_size=16G
+#       - NEO4J_server_memory_heap_initial__size=8G
+#       - NEO4J_server_memory_heap_max__size=8G
+#       - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes  # For Enterprise features
+
 services:
-  neo4j:
-    image: neo4j:5-enterprise
-    container_name: neo4j-fao
-    ports:
-      - "7474:7474"  # HTTP
-      - "7687:7687"  # Bolt
-    volumes:
-      - ./neo4j-data/data:/data
-      - ./neo4j-data/logs:/logs
-      - ./neo4j-data/import:/var/lib/neo4j/import
-      - ./neo4j-data/plugins:/plugins
+  postgres-age:
+    image: apache/age:latest
+    container_name: fao-age
     environment:
-      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD}
-      - NEO4J_PLUGINS=["apoc", "graph-data-science"]
-      - NEO4J_server_memory_pagecache_size=16G
-      - NEO4J_server_memory_heap_initial__size=8G
-      - NEO4J_server_memory_heap_max__size=8G
-      - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes  # For Enterprise features
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: fao_graph
+    ports:
+      - "5433:5432"
+    volumes:
+      - age_data:/var/lib/postgresql/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # Access host PostgreSQL
+
+volumes:
+  age_data:
