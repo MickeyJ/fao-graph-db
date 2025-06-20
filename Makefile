@@ -220,3 +220,7 @@ NO-DIRECT-USE-reset-db:
 NO-DIRECT-USE-clear-all-tables:
 	@echo "Showing all tables in the database..."
 	psql "postgresql://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)" -f sql/clear_all_tables.sql
+
+
+reset-pipeline:
+	rm -rf fao_graph/db/pipelines

@@ -15,9 +15,10 @@ class FoodSecurityDataMeasuresMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("food_security_data", "relationship")
         self.relationship_type = "MEASURES"
-        self.element_codes = ['6121', '61211', '61212', '6123', '6124', '6125', '6126', '6128', '6132', '61321', '61322', '6173']
-        self.elements = ['Value', 'Confidence interval: Lower bound', 'Confidence interval: Upper bound', 'Value', 'Value', 'Value', 'Value', 'Value', 'Value', 'Confidence interval: Lower bound', 'Confidence interval: Upper bound', 'Value']
-        self.relationship_properties = {"category": "general", "element": "Value", "element_code": "6173", "measure": "value"}
+        
+        self.element_codes = ['61212', '61322', '61211', '61321']
+        
+        self.relationship_properties = {"element": "Confidence interval: Upper bound", "element_code": "61212", "element_codes": ["61212", "61322", "61211", "61321"]}
     
     def get_migration_query(self) -> str:
         return load_sql("food_security_data_measures.cypher.sql", Path(__file__).parent)
@@ -31,8 +32,10 @@ class FoodSecurityDataMeasuresMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for food_security_data MEASURES relationships"""
         logger.info(f"Starting food_security_data MEASURES relationship migration...")
-        logger.info(f"  Elements: Value, Confidence interval: Lower bound, Confidence interval: Upper bound, Value, Value, Value, Value, Value, Value, Confidence interval: Lower bound, Confidence interval: Upper bound, Value")
-        logger.info(f"  Properties: {'category': 'general', 'measure': 'value', 'element_code': '6173', 'element': 'Value'}")
+        
+        logger.info(f"  Filtering on element codes: 61212, 61322, 61211, 61321")
+        
+        logger.info(f"  Relationship type properties: {'element_codes': ['61212', '61322', '61211', '61321'], 'element': 'Confidence interval: Upper bound', 'element_code': '61212'}")
         
         try:
             # Execute the main migration

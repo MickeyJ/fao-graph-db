@@ -15,9 +15,10 @@ class EmissionsAgricultureEnergyEmitsMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("emissions_agriculture_energy", "relationship")
         self.relationship_type = "EMITS"
-        self.element_codes = ['72184', '7225', '7230', '7273']
-        self.elements = ['Energy use in agriculture', 'Emissions (CH4)', 'Emissions (N2O)', 'Emissions (CO2)']
-        self.relationship_properties = {"category": "general", "element": "Emissions (CO2)", "element_code": "7273", "gas_type": "CO2", "source": "energy"}
+        
+        self.element_codes = ['7225', '7230', '7273']
+        
+        self.relationship_properties = {"element": "Emissions (CH4)", "element_code": "7225", "element_codes": ["7225", "7230", "7273"], "gas_type": "CH4"}
     
     def get_migration_query(self) -> str:
         return load_sql("emissions_agriculture_energy_emits.cypher.sql", Path(__file__).parent)
@@ -31,8 +32,10 @@ class EmissionsAgricultureEnergyEmitsMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for emissions_agriculture_energy EMITS relationships"""
         logger.info(f"Starting emissions_agriculture_energy EMITS relationship migration...")
-        logger.info(f"  Elements: Energy use in agriculture, Emissions (CH4), Emissions (N2O), Emissions (CO2)")
-        logger.info(f"  Properties: {'source': 'energy', 'gas_type': 'CO2', 'category': 'general', 'element_code': '7273', 'element': 'Emissions (CO2)'}")
+        
+        logger.info(f"  Filtering on element codes: 7225, 7230, 7273")
+        
+        logger.info(f"  Relationship type properties: {'element_codes': ['7225', '7230', '7273'], 'element': 'Emissions (CH4)', 'element_code': '7225', 'gas_type': 'CH4'}")
         
         try:
             # Execute the main migration

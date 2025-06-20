@@ -15,9 +15,10 @@ class InvestmentCountryInvestmentStatisticsProfileMeasuresMigrator(GraphMigratio
     def __init__(self):
         super().__init__("investment_country_investment_statistics_profile", "relationship")
         self.relationship_type = "MEASURES"
-        self.element_codes = ['6182', '61840', '62290']
-        self.elements = ['Annual growth US$, 2015 prices', 'Value US$, 2015 prices', 'Value US$, 2022 prices']
-        self.relationship_properties = {"category": "financial", "element": "Value US$, 2022 prices", "element_code": "62290", "flow_type": "general_investment"}
+        
+        self.element_codes = ['6139', '61390', '6192', '6159', '6193']
+        
+        self.relationship_properties = {"element": "Share of Total US$", "element_code": "6139", "element_codes": ["6139", "61390", "6192", "6159", "6193"]}
     
     def get_migration_query(self) -> str:
         return load_sql("investment_country_investment_statistics_profile_measures.cypher.sql", Path(__file__).parent)
@@ -31,8 +32,10 @@ class InvestmentCountryInvestmentStatisticsProfileMeasuresMigrator(GraphMigratio
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for investment_country_investment_statistics_profile MEASURES relationships"""
         logger.info(f"Starting investment_country_investment_statistics_profile MEASURES relationship migration...")
-        logger.info(f"  Elements: Annual growth US$, 2015 prices, Value US$, 2015 prices, Value US$, 2022 prices")
-        logger.info(f"  Properties: {'category': 'financial', 'flow_type': 'general_investment', 'element_code': '62290', 'element': 'Value US$, 2022 prices'}")
+        
+        logger.info(f"  Filtering on element codes: 6139, 61390, 6192, 6159, 6193")
+        
+        logger.info(f"  Relationship type properties: {'element_codes': ['6139', '61390', '6192', '6159', '6193'], 'element': 'Share of Total US$', 'element_code': '6139'}")
         
         try:
             # Execute the main migration

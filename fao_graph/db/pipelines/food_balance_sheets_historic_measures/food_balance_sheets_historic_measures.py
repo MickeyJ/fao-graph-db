@@ -15,9 +15,10 @@ class FoodBalanceSheetsHistoricMeasuresMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("food_balance_sheets_historic", "relationship")
         self.relationship_type = "MEASURES"
-        self.element_codes = ['5074', '511', '5123', '5131', '5301', '5527']
-        self.elements = ['Stock Variation', 'Total Population - Both sexes', 'Losses', 'Processing', 'Domestic supply quantity', 'Seed']
-        self.relationship_properties = {"category": "food_balance", "element": "Seed", "element_code": "5527", "measure": "other"}
+        
+        self.element_codes = ['511']
+        
+        self.relationship_properties = {"element": "Total Population - Both sexes", "element_code": "511", "element_codes": ["511"]}
     
     def get_migration_query(self) -> str:
         return load_sql("food_balance_sheets_historic_measures.cypher.sql", Path(__file__).parent)
@@ -31,8 +32,10 @@ class FoodBalanceSheetsHistoricMeasuresMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for food_balance_sheets_historic MEASURES relationships"""
         logger.info(f"Starting food_balance_sheets_historic MEASURES relationship migration...")
-        logger.info(f"  Elements: Stock Variation, Total Population - Both sexes, Losses, Processing, Domestic supply quantity, Seed")
-        logger.info(f"  Properties: {'category': 'food_balance', 'measure': 'other', 'element_code': '5527', 'element': 'Seed'}")
+        
+        logger.info(f"  Filtering on element codes: 511")
+        
+        logger.info(f"  Relationship type properties: {'element_codes': ['511'], 'element': 'Total Population - Both sexes', 'element_code': '511'}")
         
         try:
             # Execute the main migration

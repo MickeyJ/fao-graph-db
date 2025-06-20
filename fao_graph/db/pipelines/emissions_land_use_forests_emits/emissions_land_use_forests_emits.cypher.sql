@@ -1,23 +1,13 @@
 -- Create EMITS relationships from emissions_land_use_forests
 SELECT * FROM cypher('fao_graph', $$
-    MATCH (source:AreaCode {id: row.area_code_id})
-    MATCH (target:ItemCode {id: row.item_code_id})
+    MATCH (source:AreaCodes {id: row.area_code_id})
+    MATCH (target:ItemCodes {id: row.item_code_id})
     CREATE (source)-[r:EMITS {
-        -- Relationship semantic properties
-        source: 'other',
-        gas_type: 'CO2',
-        category: 'general',
-        element_code: '72332',
-        element: 'Net emissions/removals (CO2) (Forest land)',
-        -- Data properties from row
- 
+        -- Dynamic properties from row
+        element_code_id: row.element_code_id,
         year: row.year,
- 
-        unit: row.unit,
- 
         value: row.value,
- 
-        note: row.note,
+        unit: row.unit,
         -- Metadata
         source_dataset: 'emissions_land_use_forests'
     }]->(target)
@@ -27,4 +17,5 @@ FROM emissions_land_use_forests row
 WHERE row.area_code_id IS NOT NULL
   AND row.item_code_id IS NOT NULL
   AND row.value > 0
+  AND row.element_code IN (72332, 5110)
 ;

@@ -1,0 +1,1 @@
+"""Migration pipeline for prices PRODUCES relationships"""

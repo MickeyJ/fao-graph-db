@@ -1,14 +1,12 @@
 -- Indexes for INVESTS relationships from investment_foreign_direct_investment
 
 -- Index on relationship properties
-CREATE INDEX IF NOT EXISTS idx_investment_foreign_direct_investment_invests_measure
-ON fao_graph."INVESTS" USING btree ((properties->>'measure'));
-CREATE INDEX IF NOT EXISTS idx_investment_foreign_direct_investment_invests_currency
-ON fao_graph."INVESTS" USING btree ((properties->>'currency'));
-CREATE INDEX IF NOT EXISTS idx_investment_foreign_direct_investment_invests_element_code
-ON fao_graph."INVESTS" USING btree ((properties->>'element_code'));
+CREATE INDEX IF NOT EXISTS idx_investment_foreign_direct_investment_invests_element_codes
+ON fao_graph."INVESTS" USING btree ((properties->>'element_codes'));
 CREATE INDEX IF NOT EXISTS idx_investment_foreign_direct_investment_invests_element
 ON fao_graph."INVESTS" USING btree ((properties->>'element'));
+CREATE INDEX IF NOT EXISTS idx_investment_foreign_direct_investment_invests_element_code
+ON fao_graph."INVESTS" USING btree ((properties->>'element_code'));
 
 -- Index on data properties
 CREATE INDEX IF NOT EXISTS idx_investment_foreign_direct_investment_invests_year

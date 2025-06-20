@@ -1,1 +1,0 @@
-"""Migration pipeline for consumer_price_indices MEASURES relationships"""

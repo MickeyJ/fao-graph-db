@@ -1,0 +1,24 @@
+-- Verification queries for SUPPLIES relationships
+SELECT count(*) FROM cypher('fao_graph', $$
+    MATCH ()-[r:SUPPLIES]->()
+    WHERE r.source_dataset = 'supply_utilization_accounts_food_and_diet'
+    RETURN count(r)
+$$) as (count agtype);
+
+-- Sample relationships with properties
+SELECT * FROM cypher('fao_graph', $$
+    MATCH (s)-[r:SUPPLIES]->(t)
+    WHERE r.source_dataset = 'supply_utilization_accounts_food_and_diet'
+    RETURN s.name as source, 
+           type(r) as relationship, 
+           t.name as target,
+           r.indicator_codes as indicator_codes,
+           r.indicator as indicator,
+           r.indicator_code as indicator_code,
+           r.nutrient_type as nutrient_type,
+           r.year as year,
+           r.value as value,
+           r.unit as unit
+    LIMIT 10
+$$) as (source agtype, relationship agtype, target agtype
+, indicator_codes agtype, indicator agtype, indicator_code agtype, nutrient_type agtype, year agtype, value agtype, unit agtype);

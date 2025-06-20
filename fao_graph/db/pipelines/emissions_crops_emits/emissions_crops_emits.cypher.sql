@@ -1,23 +1,13 @@
 -- Create EMITS relationships from emissions_crops
 SELECT * FROM cypher('fao_graph', $$
-    MATCH (source:AreaCode {id: row.area_code_id})
-    MATCH (target:ItemCode {id: row.item_code_id})
+    MATCH (source:AreaCodes {id: row.area_code_id})
+    MATCH (target:ItemCodes {id: row.item_code_id})
     CREATE (source)-[r:EMITS {
-        -- Relationship semantic properties
-        source: 'crops',
-        gas_type: 'unspecified',
-        category: 'general',
-        element_code: '7245',
-        element: 'Burning crop residues (Biomass burned, dry matter)',
-        -- Data properties from row
- 
+        -- Dynamic properties from row
+        element_code_id: row.element_code_id,
         year: row.year,
- 
-        unit: row.unit,
- 
         value: row.value,
- 
-        note: row.note,
+        unit: row.unit,
         -- Metadata
         source_dataset: 'emissions_crops'
     }]->(target)
@@ -27,4 +17,5 @@ FROM emissions_crops row
 WHERE row.area_code_id IS NOT NULL
   AND row.item_code_id IS NOT NULL
   AND row.value > 0
+  AND row.element_code IN (72255, 72257, 72302, 72303, 72307, 72342, 72343, 72362, 723631, 723632, 72430, 72440)
 ;

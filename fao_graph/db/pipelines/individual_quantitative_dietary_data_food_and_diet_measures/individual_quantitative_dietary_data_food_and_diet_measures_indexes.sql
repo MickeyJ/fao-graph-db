@@ -1,6 +1,12 @@
 -- Indexes for MEASURES relationships from individual_quantitative_dietary_data_food_and_diet
 
 -- Index on relationship properties
+CREATE INDEX IF NOT EXISTS idx_individual_quantitative_dietary_data_food_and_diet_measures_indicator_codes
+ON fao_graph."MEASURES" USING btree ((properties->>'indicator_codes'));
+CREATE INDEX IF NOT EXISTS idx_individual_quantitative_dietary_data_food_and_diet_measures_indicator
+ON fao_graph."MEASURES" USING btree ((properties->>'indicator'));
+CREATE INDEX IF NOT EXISTS idx_individual_quantitative_dietary_data_food_and_diet_measures_indicator_code
+ON fao_graph."MEASURES" USING btree ((properties->>'indicator_code'));
 
 -- Index on data properties
 

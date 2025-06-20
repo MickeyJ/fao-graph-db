@@ -1,16 +1,14 @@
 -- Indexes for EMITS relationships from emissions_land_use_forests
 
 -- Index on relationship properties
-CREATE INDEX IF NOT EXISTS idx_emissions_land_use_forests_emits_source
-ON fao_graph."EMITS" USING btree ((properties->>'source'));
-CREATE INDEX IF NOT EXISTS idx_emissions_land_use_forests_emits_gas_type
-ON fao_graph."EMITS" USING btree ((properties->>'gas_type'));
-CREATE INDEX IF NOT EXISTS idx_emissions_land_use_forests_emits_category
-ON fao_graph."EMITS" USING btree ((properties->>'category'));
-CREATE INDEX IF NOT EXISTS idx_emissions_land_use_forests_emits_element_code
-ON fao_graph."EMITS" USING btree ((properties->>'element_code'));
+CREATE INDEX IF NOT EXISTS idx_emissions_land_use_forests_emits_element_codes
+ON fao_graph."EMITS" USING btree ((properties->>'element_codes'));
 CREATE INDEX IF NOT EXISTS idx_emissions_land_use_forests_emits_element
 ON fao_graph."EMITS" USING btree ((properties->>'element'));
+CREATE INDEX IF NOT EXISTS idx_emissions_land_use_forests_emits_element_code
+ON fao_graph."EMITS" USING btree ((properties->>'element_code'));
+CREATE INDEX IF NOT EXISTS idx_emissions_land_use_forests_emits_gas_type
+ON fao_graph."EMITS" USING btree ((properties->>'gas_type'));
 
 -- Index on data properties
 CREATE INDEX IF NOT EXISTS idx_emissions_land_use_forests_emits_year

@@ -15,9 +15,10 @@ class SuaCropsLivestockProducesMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("sua_crops_livestock", "relationship")
         self.relationship_type = "PRODUCES"
-        self.element_codes = ['5510']
-        self.elements = ['Production']
-        self.relationship_properties = {"element": "Production", "element_code": "5510", "measure": "quantity"}
+        
+        self.element_codes = ['5510', '5113', '261', '271', '281', '5016', '5023', '5071', '5141', '5164', '5165', '5166', '5520', '5525', '664', '665', '674', '684', '511']
+        
+        self.relationship_properties = {"element": "Production", "element_code": "5510", "element_codes": ["5510", "5113", "261", "271", "281", "5016", "5023", "5071", "5141", "5164", "5165", "5166", "5520", "5525", "664", "665", "674", "684", "511"]}
     
     def get_migration_query(self) -> str:
         return load_sql("sua_crops_livestock_produces.cypher.sql", Path(__file__).parent)
@@ -31,8 +32,10 @@ class SuaCropsLivestockProducesMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for sua_crops_livestock PRODUCES relationships"""
         logger.info(f"Starting sua_crops_livestock PRODUCES relationship migration...")
-        logger.info(f"  Elements: Production")
-        logger.info(f"  Properties: {'measure': 'quantity', 'element_code': '5510', 'element': 'Production'}")
+        
+        logger.info(f"  Filtering on element codes: 5510, 5113, 261, 271, 281... (19 total)")
+        
+        logger.info(f"  Relationship type properties: {'element_codes': ['5510', '5113', '261', '271', '281', '5016', '5023', '5071', '5141', '5164', '5165', '5166', '5520', '5525', '664', '665', '674', '684', '511'], 'element': 'Production', 'element_code': '5510'}")
         
         try:
             # Execute the main migration

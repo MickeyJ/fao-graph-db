@@ -15,9 +15,10 @@ class FoodBalanceSheetsHistoricSuppliesMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("food_balance_sheets_historic", "relationship")
         self.relationship_type = "SUPPLIES"
-        self.element_codes = ['674', '684']
-        self.elements = ['Protein supply quantity (g/capita/day)', 'Fat supply quantity (g/capita/day)']
-        self.relationship_properties = {"element": "Fat supply quantity (g/capita/day)", "element_code": "684", "measure": "quantity", "nutrient": "fat", "unit": "g/capita/day"}
+        
+        self.element_codes = ['674', '684', '664', '5074', '5131', '5142', '5301', '5527']
+        
+        self.relationship_properties = {"element": "Protein supply quantity (g/capita/day)", "element_code": "674", "element_codes": ["674", "684", "664", "5074", "5131", "5142", "5301", "5527"], "nutrient_type": "protein"}
     
     def get_migration_query(self) -> str:
         return load_sql("food_balance_sheets_historic_supplies.cypher.sql", Path(__file__).parent)
@@ -31,8 +32,10 @@ class FoodBalanceSheetsHistoricSuppliesMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for food_balance_sheets_historic SUPPLIES relationships"""
         logger.info(f"Starting food_balance_sheets_historic SUPPLIES relationship migration...")
-        logger.info(f"  Elements: Protein supply quantity (g/capita/day), Fat supply quantity (g/capita/day)")
-        logger.info(f"  Properties: {'nutrient': 'fat', 'measure': 'quantity', 'unit': 'g/capita/day', 'element_code': '684', 'element': 'Fat supply quantity (g/capita/day)'}")
+        
+        logger.info(f"  Filtering on element codes: 674, 684, 664, 5074, 5131... (8 total)")
+        
+        logger.info(f"  Relationship type properties: {'element_codes': ['674', '684', '664', '5074', '5131', '5142', '5301', '5527'], 'element': 'Protein supply quantity (g/capita/day)', 'element_code': '674', 'nutrient_type': 'protein'}")
         
         try:
             # Execute the main migration

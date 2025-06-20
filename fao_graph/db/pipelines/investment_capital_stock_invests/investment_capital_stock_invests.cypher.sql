@@ -1,22 +1,13 @@
 -- Create INVESTS relationships from investment_capital_stock
 SELECT * FROM cypher('fao_graph', $$
-    MATCH (source:AreaCode {id: row.area_code_id})
-    MATCH (target:ItemCode {id: row.item_code_id})
+    MATCH (source:AreaCodes {id: row.area_code_id})
+    MATCH (target:ItemCodes {id: row.item_code_id})
     CREATE (source)-[r:INVESTS {
-        -- Relationship semantic properties
-        measure: 'share_of_value_added',
-        currency: 'local',
-        element_code: '61950',
-        element: 'Share of Value Added Standard Local Currency, 2015 prices',
-        -- Data properties from row
- 
+        -- Dynamic properties from row
+        element_code_id: row.element_code_id,
         year: row.year,
- 
-        unit: row.unit,
- 
         value: row.value,
- 
-        note: row.note,
+        unit: row.unit,
         -- Metadata
         source_dataset: 'investment_capital_stock'
     }]->(target)
@@ -26,4 +17,5 @@ FROM investment_capital_stock row
 WHERE row.area_code_id IS NOT NULL
   AND row.item_code_id IS NOT NULL
   AND row.value > 0
+  AND row.element_code IN (61391, 61392, 61393, 61394, 6110, 61120, 6159, 6184, 6193, 61940, 6224, 6225)
 ;

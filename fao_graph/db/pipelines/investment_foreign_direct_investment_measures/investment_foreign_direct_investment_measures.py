@@ -15,9 +15,10 @@ class InvestmentForeignDirectInvestmentMeasuresMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("investment_foreign_direct_investment", "relationship")
         self.relationship_type = "MEASURES"
-        self.element_codes = ['6110', '6184']
-        self.elements = ['Value US$', 'Value US$, 2015 prices']
-        self.relationship_properties = {"category": "financial", "element": "Value US$, 2015 prices", "element_code": "6184", "flow_type": "foreign_direct_investment"}
+        
+        self.element_codes = ['61410', '61420']
+        
+        self.relationship_properties = {"element": "Share of Total FDI inflows US$, 2015 prices", "element_code": "61410", "element_codes": ["61410", "61420"]}
     
     def get_migration_query(self) -> str:
         return load_sql("investment_foreign_direct_investment_measures.cypher.sql", Path(__file__).parent)
@@ -31,8 +32,10 @@ class InvestmentForeignDirectInvestmentMeasuresMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for investment_foreign_direct_investment MEASURES relationships"""
         logger.info(f"Starting investment_foreign_direct_investment MEASURES relationship migration...")
-        logger.info(f"  Elements: Value US$, Value US$, 2015 prices")
-        logger.info(f"  Properties: {'category': 'financial', 'flow_type': 'foreign_direct_investment', 'element_code': '6184', 'element': 'Value US$, 2015 prices'}")
+        
+        logger.info(f"  Filtering on element codes: 61410, 61420")
+        
+        logger.info(f"  Relationship type properties: {'element_codes': ['61410', '61420'], 'element': 'Share of Total FDI inflows US$, 2015 prices', 'element_code': '61410'}")
         
         try:
             # Execute the main migration

@@ -1,6 +1,12 @@
 -- Indexes for MEASURES relationships from employment_indicators_agriculture
 
 -- Index on relationship properties
+CREATE INDEX IF NOT EXISTS idx_employment_indicators_agriculture_measures_indicator_codes
+ON fao_graph."MEASURES" USING btree ((properties->>'indicator_codes'));
+CREATE INDEX IF NOT EXISTS idx_employment_indicators_agriculture_measures_indicator
+ON fao_graph."MEASURES" USING btree ((properties->>'indicator'));
+CREATE INDEX IF NOT EXISTS idx_employment_indicators_agriculture_measures_indicator_code
+ON fao_graph."MEASURES" USING btree ((properties->>'indicator_code'));
 
 -- Index on data properties
 CREATE INDEX IF NOT EXISTS idx_employment_indicators_agriculture_measures_year

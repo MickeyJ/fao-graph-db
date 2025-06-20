@@ -1,14 +1,12 @@
 -- Indexes for MEASURES relationships from investment_foreign_direct_investment
 
 -- Index on relationship properties
-CREATE INDEX IF NOT EXISTS idx_investment_foreign_direct_investment_measures_category
-ON fao_graph."MEASURES" USING btree ((properties->>'category'));
-CREATE INDEX IF NOT EXISTS idx_investment_foreign_direct_investment_measures_flow_type
-ON fao_graph."MEASURES" USING btree ((properties->>'flow_type'));
-CREATE INDEX IF NOT EXISTS idx_investment_foreign_direct_investment_measures_element_code
-ON fao_graph."MEASURES" USING btree ((properties->>'element_code'));
+CREATE INDEX IF NOT EXISTS idx_investment_foreign_direct_investment_measures_element_codes
+ON fao_graph."MEASURES" USING btree ((properties->>'element_codes'));
 CREATE INDEX IF NOT EXISTS idx_investment_foreign_direct_investment_measures_element
 ON fao_graph."MEASURES" USING btree ((properties->>'element'));
+CREATE INDEX IF NOT EXISTS idx_investment_foreign_direct_investment_measures_element_code
+ON fao_graph."MEASURES" USING btree ((properties->>'element_code'));
 
 -- Index on data properties
 CREATE INDEX IF NOT EXISTS idx_investment_foreign_direct_investment_measures_year

@@ -15,9 +15,10 @@ class MacroStatisticsKeyIndicatorsMeasuresMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("macro_statistics_key_indicators", "relationship")
         self.relationship_type = "MEASURES"
-        self.element_codes = ['6103', '6110', '6119', '6129', '61290', '6143', '61550', '61570', '6163', '61810', '6182', '61820', '6184', '6185', '61860', '6187', '61890', '61900', '6224', '6225']
-        self.elements = ['Share of GDP US$', 'Value US$', 'Value US$ per capita', 'Annual growth US$', 'Annual growth US$ per capita', 'Share of Value Added (Total Manufacturing) US$', 'Annual growth Standard Local Currency', 'Share of GDP Standard Local Currency', 'Ratio of Value Added (Agriculture, Forestry and Fishing) US$', 'Annual growth Standard Local Currency, 2015 prices', 'Annual growth US$, 2015 prices', 'Annual growth US$ per capita, 2015 prices', 'Value US$, 2015 prices', 'Value US$ per capita, 2015 prices', 'Share of GDP Standard Local Currency, 2015 prices', 'Share of GDP US$, 2015 prices', 'Ratio of Value Added (Agriculture, Forestry and Fishing) Standard Local Currency', 'Share of Value Added (Total Manufacturing) Standard Local Currency', 'Value Standard Local Currency', 'Value Standard Local Currency, 2015 prices']
-        self.relationship_properties = {"category": "general", "element": "Value Standard Local Currency, 2015 prices", "element_code": "6225", "measure": "value"}
+        
+        self.element_codes = ['6143', '61900', '6103', '61570', '6163', '61860', '6187', '61890', '6119', '61290', '61820', '6185', '6110', '6129', '61550', '61810', '6182', '6184', '6224', '6225']
+        
+        self.relationship_properties = {"element": "Share of Value Added (Total Manufacturing) US$", "element_code": "6143", "element_codes": ["6143", "61900", "6103", "61570", "6163", "61860", "6187", "61890", "6119", "61290", "61820", "6185", "6110", "6129", "61550", "61810", "6182", "6184", "6224", "6225"]}
     
     def get_migration_query(self) -> str:
         return load_sql("macro_statistics_key_indicators_measures.cypher.sql", Path(__file__).parent)
@@ -31,8 +32,10 @@ class MacroStatisticsKeyIndicatorsMeasuresMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for macro_statistics_key_indicators MEASURES relationships"""
         logger.info(f"Starting macro_statistics_key_indicators MEASURES relationship migration...")
-        logger.info(f"  Elements: Share of GDP US$, Value US$, Value US$ per capita, Annual growth US$, Annual growth US$ per capita, Share of Value Added (Total Manufacturing) US$, Annual growth Standard Local Currency, Share of GDP Standard Local Currency, Ratio of Value Added (Agriculture, Forestry and Fishing) US$, Annual growth Standard Local Currency, 2015 prices, Annual growth US$, 2015 prices, Annual growth US$ per capita, 2015 prices, Value US$, 2015 prices, Value US$ per capita, 2015 prices, Share of GDP Standard Local Currency, 2015 prices, Share of GDP US$, 2015 prices, Ratio of Value Added (Agriculture, Forestry and Fishing) Standard Local Currency, Share of Value Added (Total Manufacturing) Standard Local Currency, Value Standard Local Currency, Value Standard Local Currency, 2015 prices")
-        logger.info(f"  Properties: {'category': 'general', 'measure': 'value', 'element_code': '6225', 'element': 'Value Standard Local Currency, 2015 prices'}")
+        
+        logger.info(f"  Filtering on element codes: 6143, 61900, 6103, 61570, 6163... (20 total)")
+        
+        logger.info(f"  Relationship type properties: {'element_codes': ['6143', '61900', '6103', '61570', '6163', '61860', '6187', '61890', '6119', '61290', '61820', '6185', '6110', '6129', '61550', '61810', '6182', '6184', '6224', '6225'], 'element': 'Share of Value Added (Total Manufacturing) US$', 'element_code': '6143'}")
         
         try:
             # Execute the main migration

@@ -1,12 +1,12 @@
 -- Indexes for PRODUCES relationships from food_balance_sheets_historic
 
 -- Index on relationship properties
-CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_historic_produces_measure
-ON fao_graph."PRODUCES" USING btree ((properties->>'measure'));
-CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_historic_produces_element_code
-ON fao_graph."PRODUCES" USING btree ((properties->>'element_code'));
+CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_historic_produces_element_codes
+ON fao_graph."PRODUCES" USING btree ((properties->>'element_codes'));
 CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_historic_produces_element
 ON fao_graph."PRODUCES" USING btree ((properties->>'element'));
+CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_historic_produces_element_code
+ON fao_graph."PRODUCES" USING btree ((properties->>'element_code'));
 
 -- Index on data properties
 CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_historic_produces_year

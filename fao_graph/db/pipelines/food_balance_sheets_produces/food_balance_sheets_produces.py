@@ -15,9 +15,10 @@ class FoodBalanceSheetsProducesMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("food_balance_sheets", "relationship")
         self.relationship_type = "PRODUCES"
+        
         self.element_codes = ['5511']
-        self.elements = ['Production']
-        self.relationship_properties = {"element": "Production", "element_code": "5511", "measure": "quantity"}
+        
+        self.relationship_properties = {"element": "Production", "element_code": "5511", "element_codes": ["5511"]}
     
     def get_migration_query(self) -> str:
         return load_sql("food_balance_sheets_produces.cypher.sql", Path(__file__).parent)
@@ -31,8 +32,10 @@ class FoodBalanceSheetsProducesMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for food_balance_sheets PRODUCES relationships"""
         logger.info(f"Starting food_balance_sheets PRODUCES relationship migration...")
-        logger.info(f"  Elements: Production")
-        logger.info(f"  Properties: {'measure': 'quantity', 'element_code': '5511', 'element': 'Production'}")
+        
+        logger.info(f"  Filtering on element codes: 5511")
+        
+        logger.info(f"  Relationship type properties: {'element_codes': ['5511'], 'element': 'Production', 'element_code': '5511'}")
         
         try:
             # Execute the main migration

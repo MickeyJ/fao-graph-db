@@ -15,9 +15,10 @@ class AstiResearchersEmploysMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("asti_researchers", "relationship")
         self.relationship_type = "EMPLOYS"
+        
         self.element_codes = ['6082', '6086']
-        self.elements = ['Researchers, total', 'Per 100,000 farmers']
-        self.relationship_properties = {"element": "Per 100,000 farmers", "element_code": "6086", "measure": "other", "role": "worker"}
+        
+        self.relationship_properties = {"element": "Researchers, total", "element_code": "6082", "element_codes": ["6082", "6086"]}
     
     def get_migration_query(self) -> str:
         return load_sql("asti_researchers_employs.cypher.sql", Path(__file__).parent)
@@ -31,8 +32,10 @@ class AstiResearchersEmploysMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for asti_researchers EMPLOYS relationships"""
         logger.info(f"Starting asti_researchers EMPLOYS relationship migration...")
-        logger.info(f"  Elements: Researchers, total, Per 100,000 farmers")
-        logger.info(f"  Properties: {'role': 'worker', 'measure': 'other', 'element_code': '6086', 'element': 'Per 100,000 farmers'}")
+        
+        logger.info(f"  Filtering on element codes: 6082, 6086")
+        
+        logger.info(f"  Relationship type properties: {'element_codes': ['6082', '6086'], 'element': 'Researchers, total', 'element_code': '6082'}")
         
         try:
             # Execute the main migration

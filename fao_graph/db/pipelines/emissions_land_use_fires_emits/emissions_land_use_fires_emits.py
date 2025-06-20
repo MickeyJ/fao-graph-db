@@ -15,9 +15,10 @@ class EmissionsLandUseFiresEmitsMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("emissions_land_use_fires", "relationship")
         self.relationship_type = "EMITS"
-        self.element_codes = ['7225', '7230', '7245', '7246', '7273']
-        self.elements = ['Emissions (CH4)', 'Emissions (N2O)', 'Burning crop residues (Biomass burned, dry matter)', 'Burned Area', 'Emissions (CO2)']
-        self.relationship_properties = {"category": "general", "element": "Emissions (CO2)", "element_code": "7273", "gas_type": "CO2", "source": "other"}
+        
+        self.element_codes = ['7225', '7230', '7273', '7245', '7246']
+        
+        self.relationship_properties = {"element": "Emissions (CH4)", "element_code": "7225", "element_codes": ["7225", "7230", "7273", "7245", "7246"], "gas_type": "CH4"}
     
     def get_migration_query(self) -> str:
         return load_sql("emissions_land_use_fires_emits.cypher.sql", Path(__file__).parent)
@@ -31,8 +32,10 @@ class EmissionsLandUseFiresEmitsMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for emissions_land_use_fires EMITS relationships"""
         logger.info(f"Starting emissions_land_use_fires EMITS relationship migration...")
-        logger.info(f"  Elements: Emissions (CH4), Emissions (N2O), Burning crop residues (Biomass burned, dry matter), Burned Area, Emissions (CO2)")
-        logger.info(f"  Properties: {'source': 'other', 'gas_type': 'CO2', 'category': 'general', 'element_code': '7273', 'element': 'Emissions (CO2)'}")
+        
+        logger.info(f"  Filtering on element codes: 7225, 7230, 7273, 7245, 7246")
+        
+        logger.info(f"  Relationship type properties: {'element_codes': ['7225', '7230', '7273', '7245', '7246'], 'element': 'Emissions (CH4)', 'element_code': '7225', 'gas_type': 'CH4'}")
         
         try:
             # Execute the main migration

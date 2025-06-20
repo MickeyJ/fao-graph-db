@@ -15,9 +15,10 @@ class SdgBulkDownloadsMeasuresMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("sdg_bulk_downloads", "relationship")
         self.relationship_type = "MEASURES"
-        self.element_codes = ['6121', '61211', '61212', '6125', '6132', '6173', '6174', '61741', '6176', '6177', '6178', '6199', '61991', '61992', '6204', '6241']
-        self.elements = ['Value', 'Confidence interval: Lower bound', 'Confidence interval: Upper bound', 'Value', 'Value', 'Value', 'Value (2017 constant prices)', 'Value (2017 constant prices)', 'Value', 'Value', 'Value', 'Value', 'Confidence interval: Lower bound', 'Confidence interval: Upper bound', 'Value', 'Value']
-        self.relationship_properties = {"category": "general", "element": "Value", "element_code": "6241", "measure": "value"}
+        
+        self.element_codes = ['61212', '61992', '61211', '61991']
+        
+        self.relationship_properties = {"element": "Confidence interval: Upper bound", "element_code": "61212", "element_codes": ["61212", "61992", "61211", "61991"]}
     
     def get_migration_query(self) -> str:
         return load_sql("sdg_bulk_downloads_measures.cypher.sql", Path(__file__).parent)
@@ -31,8 +32,10 @@ class SdgBulkDownloadsMeasuresMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for sdg_bulk_downloads MEASURES relationships"""
         logger.info(f"Starting sdg_bulk_downloads MEASURES relationship migration...")
-        logger.info(f"  Elements: Value, Confidence interval: Lower bound, Confidence interval: Upper bound, Value, Value, Value, Value (2017 constant prices), Value (2017 constant prices), Value, Value, Value, Value, Confidence interval: Lower bound, Confidence interval: Upper bound, Value, Value")
-        logger.info(f"  Properties: {'category': 'general', 'measure': 'value', 'element_code': '6241', 'element': 'Value'}")
+        
+        logger.info(f"  Filtering on element codes: 61212, 61992, 61211, 61991")
+        
+        logger.info(f"  Relationship type properties: {'element_codes': ['61212', '61992', '61211', '61991'], 'element': 'Confidence interval: Upper bound', 'element_code': '61212'}")
         
         try:
             # Execute the main migration

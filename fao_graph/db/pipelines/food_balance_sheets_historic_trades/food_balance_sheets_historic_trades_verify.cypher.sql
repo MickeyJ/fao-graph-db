@@ -12,13 +12,13 @@ SELECT * FROM cypher('fao_graph', $$
     RETURN s.name as source, 
            type(r) as relationship, 
            t.name as target,
-           r.flow as flow,
-           r.measure as measure,
-           r.element_code as element_code,
+           r.element_codes as element_codes,
            r.element as element,
+           r.element_code as element_code,
+           r.flow_direction as flow_direction,
            r.year as year,
            r.value as value,
            r.unit as unit
     LIMIT 10
 $$) as (source agtype, relationship agtype, target agtype
-, flow agtype, measure agtype, element_code agtype, element agtype, year agtype, value agtype, unit agtype);
+, element_codes agtype, element agtype, element_code agtype, flow_direction agtype, year agtype, value agtype, unit agtype);

@@ -1,14 +1,14 @@
 -- Indexes for TRADES relationships from inputs_pesticides_trade
 
 -- Index on relationship properties
-CREATE INDEX IF NOT EXISTS idx_inputs_pesticides_trade_trades_flow
-ON fao_graph."TRADES" USING btree ((properties->>'flow'));
-CREATE INDEX IF NOT EXISTS idx_inputs_pesticides_trade_trades_measure
-ON fao_graph."TRADES" USING btree ((properties->>'measure'));
-CREATE INDEX IF NOT EXISTS idx_inputs_pesticides_trade_trades_element_code
-ON fao_graph."TRADES" USING btree ((properties->>'element_code'));
+CREATE INDEX IF NOT EXISTS idx_inputs_pesticides_trade_trades_element_codes
+ON fao_graph."TRADES" USING btree ((properties->>'element_codes'));
 CREATE INDEX IF NOT EXISTS idx_inputs_pesticides_trade_trades_element
 ON fao_graph."TRADES" USING btree ((properties->>'element'));
+CREATE INDEX IF NOT EXISTS idx_inputs_pesticides_trade_trades_element_code
+ON fao_graph."TRADES" USING btree ((properties->>'element_code'));
+CREATE INDEX IF NOT EXISTS idx_inputs_pesticides_trade_trades_flow_direction
+ON fao_graph."TRADES" USING btree ((properties->>'flow_direction'));
 
 -- Index on data properties
 CREATE INDEX IF NOT EXISTS idx_inputs_pesticides_trade_trades_year

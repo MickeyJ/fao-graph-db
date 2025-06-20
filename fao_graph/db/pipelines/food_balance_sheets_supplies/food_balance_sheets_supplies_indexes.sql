@@ -1,16 +1,14 @@
 -- Indexes for SUPPLIES relationships from food_balance_sheets
 
 -- Index on relationship properties
-CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_supplies_nutrient
-ON fao_graph."SUPPLIES" USING btree ((properties->>'nutrient'));
-CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_supplies_measure
-ON fao_graph."SUPPLIES" USING btree ((properties->>'measure'));
-CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_supplies_unit
-ON fao_graph."SUPPLIES" USING btree ((properties->>'unit'));
-CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_supplies_element_code
-ON fao_graph."SUPPLIES" USING btree ((properties->>'element_code'));
+CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_supplies_element_codes
+ON fao_graph."SUPPLIES" USING btree ((properties->>'element_codes'));
 CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_supplies_element
 ON fao_graph."SUPPLIES" USING btree ((properties->>'element'));
+CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_supplies_element_code
+ON fao_graph."SUPPLIES" USING btree ((properties->>'element_code'));
+CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_supplies_nutrient_type
+ON fao_graph."SUPPLIES" USING btree ((properties->>'nutrient_type'));
 
 -- Index on data properties
 CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_supplies_year

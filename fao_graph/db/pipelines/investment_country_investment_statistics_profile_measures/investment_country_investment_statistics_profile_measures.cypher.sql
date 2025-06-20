@@ -1,22 +1,13 @@
 -- Create MEASURES relationships from investment_country_investment_statistics_profile
 SELECT * FROM cypher('fao_graph', $$
-    MATCH (source:AreaCode {id: row.area_code_id})
-    MATCH (target:ItemCode {id: row.item_code_id})
+    MATCH (source:AreaCodes {id: row.area_code_id})
+    MATCH (target:ItemCodes {id: row.item_code_id})
     CREATE (source)-[r:MEASURES {
-        -- Relationship semantic properties
-        category: 'financial',
-        flow_type: 'general_investment',
-        element_code: '62290',
-        element: 'Value US$, 2022 prices',
-        -- Data properties from row
- 
+        -- Dynamic properties from row
+        element_code_id: row.element_code_id,
         year: row.year,
- 
-        unit: row.unit,
- 
         value: row.value,
- 
-        note: row.note,
+        unit: row.unit,
         -- Metadata
         source_dataset: 'investment_country_investment_statistics_profile'
     }]->(target)
@@ -26,4 +17,5 @@ FROM investment_country_investment_statistics_profile row
 WHERE row.area_code_id IS NOT NULL
   AND row.item_code_id IS NOT NULL
   AND row.value > 0
+  AND row.element_code IN (6139, 61390, 6192, 6159, 6193)
 ;

@@ -1,14 +1,12 @@
 -- Indexes for MEASURES relationships from world_census_agriculture
 
 -- Index on relationship properties
-CREATE INDEX IF NOT EXISTS idx_world_census_agriculture_measures_category
-ON fao_graph."MEASURES" USING btree ((properties->>'category'));
-CREATE INDEX IF NOT EXISTS idx_world_census_agriculture_measures_measure
-ON fao_graph."MEASURES" USING btree ((properties->>'measure'));
-CREATE INDEX IF NOT EXISTS idx_world_census_agriculture_measures_element_code
-ON fao_graph."MEASURES" USING btree ((properties->>'element_code'));
+CREATE INDEX IF NOT EXISTS idx_world_census_agriculture_measures_element_codes
+ON fao_graph."MEASURES" USING btree ((properties->>'element_codes'));
 CREATE INDEX IF NOT EXISTS idx_world_census_agriculture_measures_element
 ON fao_graph."MEASURES" USING btree ((properties->>'element'));
+CREATE INDEX IF NOT EXISTS idx_world_census_agriculture_measures_element_code
+ON fao_graph."MEASURES" USING btree ((properties->>'element_code'));
 
 -- Index on data properties
 

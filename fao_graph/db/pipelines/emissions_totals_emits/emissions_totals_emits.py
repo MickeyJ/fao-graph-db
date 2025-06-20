@@ -15,9 +15,10 @@ class EmissionsTotalsEmitsMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("emissions_totals", "relationship")
         self.relationship_type = "EMITS"
-        self.element_codes = ['717815', '7225', '7230', '723113', '7234', '7236', '724313', '724413', '7273']
-        self.elements = ['Emissions (CO2eq) from F-gases (AR5)', 'Emissions (CH4)', 'Emissions (N2O)', 'Emissions (CO2eq) (AR5)', 'Direct emissions (N2O)', 'Indirect emissions (N2O)', 'Emissions (CO2eq) from N2O (AR5)', 'Emissions (CO2eq) from CH4 (AR5)', 'Emissions (CO2)']
-        self.relationship_properties = {"category": "general", "element": "Emissions (CO2)", "element_code": "7273", "gas_type": "CO2", "source": "other"}
+        
+        self.element_codes = ['724313', '724413', '717815', '7225', '7230', '723113', '7234', '7236', '7273']
+        
+        self.relationship_properties = {"element": "Emissions (CO2eq) from N2O (AR5)", "element_code": "724313", "element_codes": ["724313", "724413", "717815", "7225", "7230", "723113", "7234", "7236", "7273"], "gas_type": "CH4"}
     
     def get_migration_query(self) -> str:
         return load_sql("emissions_totals_emits.cypher.sql", Path(__file__).parent)
@@ -31,8 +32,10 @@ class EmissionsTotalsEmitsMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for emissions_totals EMITS relationships"""
         logger.info(f"Starting emissions_totals EMITS relationship migration...")
-        logger.info(f"  Elements: Emissions (CO2eq) from F-gases (AR5), Emissions (CH4), Emissions (N2O), Emissions (CO2eq) (AR5), Direct emissions (N2O), Indirect emissions (N2O), Emissions (CO2eq) from N2O (AR5), Emissions (CO2eq) from CH4 (AR5), Emissions (CO2)")
-        logger.info(f"  Properties: {'source': 'other', 'gas_type': 'CO2', 'category': 'general', 'element_code': '7273', 'element': 'Emissions (CO2)'}")
+        
+        logger.info(f"  Filtering on element codes: 724313, 724413, 717815, 7225, 7230... (9 total)")
+        
+        logger.info(f"  Relationship type properties: {'element_codes': ['724313', '724413', '717815', '7225', '7230', '723113', '7234', '7236', '7273'], 'element': 'Emissions (CO2eq) from N2O (AR5)', 'element_code': '724313', 'gas_type': 'CH4'}")
         
         try:
             # Execute the main migration

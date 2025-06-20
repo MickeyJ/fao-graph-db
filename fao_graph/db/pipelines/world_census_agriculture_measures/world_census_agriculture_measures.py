@@ -15,9 +15,10 @@ class WorldCensusAgricultureMeasuresMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("world_census_agriculture", "relationship")
         self.relationship_type = "MEASURES"
-        self.element_codes = ['5017', '5018', '50190', '50191', '50260', '60850', '6200', '6201', '62020', '62021']
-        self.elements = ['Average area', 'Average number of parcels per holding', 'Average persons per holding (household members)', 'Average persons per holding (hired permanent workers)', 'Area', 'Number', 'Percentage of total area', 'Percent of total number', 'Percent of total persons (holders)', 'Percent of total persons (household members)']
-        self.relationship_properties = {"category": "general", "element": "Percent of total persons (household members)", "element_code": "62021", "measure": "other"}
+        
+        self.element_codes = ['5018', '50190', '50191', '6200', '5017', '6201', '62020']
+        
+        self.relationship_properties = {"element": "Average number of parcels per holding", "element_code": "5018", "element_codes": ["5018", "50190", "50191", "6200", "5017", "6201", "62020"]}
     
     def get_migration_query(self) -> str:
         return load_sql("world_census_agriculture_measures.cypher.sql", Path(__file__).parent)
@@ -31,8 +32,10 @@ class WorldCensusAgricultureMeasuresMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for world_census_agriculture MEASURES relationships"""
         logger.info(f"Starting world_census_agriculture MEASURES relationship migration...")
-        logger.info(f"  Elements: Average area, Average number of parcels per holding, Average persons per holding (household members), Average persons per holding (hired permanent workers), Area, Number, Percentage of total area, Percent of total number, Percent of total persons (holders), Percent of total persons (household members)")
-        logger.info(f"  Properties: {'category': 'general', 'measure': 'other', 'element_code': '62021', 'element': 'Percent of total persons (household members)'}")
+        
+        logger.info(f"  Filtering on element codes: 5018, 50190, 50191, 6200, 5017... (7 total)")
+        
+        logger.info(f"  Relationship type properties: {'element_codes': ['5018', '50190', '50191', '6200', '5017', '6201', '62020'], 'element': 'Average number of parcels per holding', 'element_code': '5018'}")
         
         try:
             # Execute the main migration

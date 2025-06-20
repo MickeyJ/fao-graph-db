@@ -15,9 +15,10 @@ class FoodBalanceSheetsSuppliesMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("food_balance_sheets", "relationship")
         self.relationship_type = "SUPPLIES"
-        self.element_codes = ['671', '674', '681', '684']
-        self.elements = ['Protein supply quantity (t)', 'Protein supply quantity (g/capita/day)', 'Fat supply quantity (t)', 'Fat supply quantity (g/capita/day)']
-        self.relationship_properties = {"element": "Fat supply quantity (g/capita/day)", "element_code": "684", "measure": "quantity", "nutrient": "fat", "unit": "g/capita/day"}
+        
+        self.element_codes = ['671', '674', '681', '684', '661', '664', '5072', '5131', '5142', '5170', '5301', '5527']
+        
+        self.relationship_properties = {"element": "Protein supply quantity (t)", "element_code": "671", "element_codes": ["671", "674", "681", "684", "661", "664", "5072", "5131", "5142", "5170", "5301", "5527"], "nutrient_type": "protein"}
     
     def get_migration_query(self) -> str:
         return load_sql("food_balance_sheets_supplies.cypher.sql", Path(__file__).parent)
@@ -31,8 +32,10 @@ class FoodBalanceSheetsSuppliesMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for food_balance_sheets SUPPLIES relationships"""
         logger.info(f"Starting food_balance_sheets SUPPLIES relationship migration...")
-        logger.info(f"  Elements: Protein supply quantity (t), Protein supply quantity (g/capita/day), Fat supply quantity (t), Fat supply quantity (g/capita/day)")
-        logger.info(f"  Properties: {'nutrient': 'fat', 'measure': 'quantity', 'unit': 'g/capita/day', 'element_code': '684', 'element': 'Fat supply quantity (g/capita/day)'}")
+        
+        logger.info(f"  Filtering on element codes: 671, 674, 681, 684, 661... (12 total)")
+        
+        logger.info(f"  Relationship type properties: {'element_codes': ['671', '674', '681', '684', '661', '664', '5072', '5131', '5142', '5170', '5301', '5527'], 'element': 'Protein supply quantity (t)', 'element_code': '671', 'nutrient_type': 'protein'}")
         
         try:
             # Execute the main migration

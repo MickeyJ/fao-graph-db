@@ -15,9 +15,10 @@ class InvestmentCreditAgricultureInvestsMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("investment_credit_agriculture", "relationship")
         self.relationship_type = "INVESTS"
-        self.element_codes = ['61133', '6193']
-        self.elements = ['Share of Total Credit US$, 2015 prices', 'Agriculture orientation index US$, 2015 prices']
-        self.relationship_properties = {"currency": "USD", "element": "Agriculture orientation index US$, 2015 prices", "element_code": "6193", "measure": "agriculture_orientation_index"}
+        
+        self.element_codes = ['61133', '6110', '6184', '6193', '6224', '6225']
+        
+        self.relationship_properties = {"element": "Share of Total Credit US$, 2015 prices", "element_code": "61133", "element_codes": ["61133", "6110", "6184", "6193", "6224", "6225"]}
     
     def get_migration_query(self) -> str:
         return load_sql("investment_credit_agriculture_invests.cypher.sql", Path(__file__).parent)
@@ -31,8 +32,10 @@ class InvestmentCreditAgricultureInvestsMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for investment_credit_agriculture INVESTS relationships"""
         logger.info(f"Starting investment_credit_agriculture INVESTS relationship migration...")
-        logger.info(f"  Elements: Share of Total Credit US$, 2015 prices, Agriculture orientation index US$, 2015 prices")
-        logger.info(f"  Properties: {'measure': 'agriculture_orientation_index', 'currency': 'USD', 'element_code': '6193', 'element': 'Agriculture orientation index US$, 2015 prices'}")
+        
+        logger.info(f"  Filtering on element codes: 61133, 6110, 6184, 6193, 6224... (6 total)")
+        
+        logger.info(f"  Relationship type properties: {'element_codes': ['61133', '6110', '6184', '6193', '6224', '6225'], 'element': 'Share of Total Credit US$, 2015 prices', 'element_code': '61133'}")
         
         try:
             # Execute the main migration

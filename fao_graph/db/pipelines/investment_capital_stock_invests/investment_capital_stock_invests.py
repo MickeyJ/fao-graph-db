@@ -15,9 +15,10 @@ class InvestmentCapitalStockInvestsMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("investment_capital_stock", "relationship")
         self.relationship_type = "INVESTS"
-        self.element_codes = ['61120', '61350', '61391', '61392', '61393', '61394', '6159', '6161', '6192', '6193', '61940', '61950']
-        self.elements = ['Agriculture orientation index Standard Local Currency', 'Share of Value Added Standard Local Currency', 'Share of Gross Fixed Capital Formation US$', 'Share of Gross Fixed Capital Formation US$, 2015 prices', 'Share of Gross Fixed Capital Formation', 'Share of Gross Fixed Capital Formation, 2015 prices', 'Agriculture orientation index US$', 'Share of Value Added US$', 'Share of Value Added US$, 2015 prices', 'Agriculture orientation index US$, 2015 prices', 'Agriculture orientation index Standard Local Currency, 2015 prices', 'Share of Value Added Standard Local Currency, 2015 prices']
-        self.relationship_properties = {"currency": "local", "element": "Share of Value Added Standard Local Currency, 2015 prices", "element_code": "61950", "measure": "share_of_value_added"}
+        
+        self.element_codes = ['61391', '61392', '61393', '61394', '6110', '61120', '6159', '6184', '6193', '61940', '6224', '6225']
+        
+        self.relationship_properties = {"element": "Share of Gross Fixed Capital Formation US$", "element_code": "61391", "element_codes": ["61391", "61392", "61393", "61394", "6110", "61120", "6159", "6184", "6193", "61940", "6224", "6225"]}
     
     def get_migration_query(self) -> str:
         return load_sql("investment_capital_stock_invests.cypher.sql", Path(__file__).parent)
@@ -31,8 +32,10 @@ class InvestmentCapitalStockInvestsMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for investment_capital_stock INVESTS relationships"""
         logger.info(f"Starting investment_capital_stock INVESTS relationship migration...")
-        logger.info(f"  Elements: Agriculture orientation index Standard Local Currency, Share of Value Added Standard Local Currency, Share of Gross Fixed Capital Formation US$, Share of Gross Fixed Capital Formation US$, 2015 prices, Share of Gross Fixed Capital Formation, Share of Gross Fixed Capital Formation, 2015 prices, Agriculture orientation index US$, Share of Value Added US$, Share of Value Added US$, 2015 prices, Agriculture orientation index US$, 2015 prices, Agriculture orientation index Standard Local Currency, 2015 prices, Share of Value Added Standard Local Currency, 2015 prices")
-        logger.info(f"  Properties: {'measure': 'share_of_value_added', 'currency': 'local', 'element_code': '61950', 'element': 'Share of Value Added Standard Local Currency, 2015 prices'}")
+        
+        logger.info(f"  Filtering on element codes: 61391, 61392, 61393, 61394, 6110... (12 total)")
+        
+        logger.info(f"  Relationship type properties: {'element_codes': ['61391', '61392', '61393', '61394', '6110', '61120', '6159', '6184', '6193', '61940', '6224', '6225'], 'element': 'Share of Gross Fixed Capital Formation US$', 'element_code': '61391'}")
         
         try:
             # Execute the main migration

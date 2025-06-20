@@ -15,9 +15,10 @@ class InvestmentGovernmentExpenditureInvestsMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("investment_government_expenditure", "relationship")
         self.relationship_type = "INVESTS"
-        self.element_codes = ['61060', '6111', '6131', '6197']
-        self.elements = ['SDG 2.a.1: Agriculture value added share of GDP', 'Share of Total Expenditure', 'SDG 2.a.1: Agriculture share of Government Expenditure', 'SDG 2.a.1: Agriculture Orientation Index (AOI) for Government Expenditure']
-        self.relationship_properties = {"currency": "local", "element": "SDG 2.a.1: Agriculture Orientation Index (AOI) for Government Expenditure", "element_code": "6197", "measure": "agriculture_orientation_index"}
+        
+        self.element_codes = ['6131', '6197', '6111', '61060', '6110', '6184', '6224']
+        
+        self.relationship_properties = {"element": "SDG 2.a.1: Agriculture share of Government Expenditure", "element_code": "6131", "element_codes": ["6131", "6197", "6111", "61060", "6110", "6184", "6224"]}
     
     def get_migration_query(self) -> str:
         return load_sql("investment_government_expenditure_invests.cypher.sql", Path(__file__).parent)
@@ -31,8 +32,10 @@ class InvestmentGovernmentExpenditureInvestsMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for investment_government_expenditure INVESTS relationships"""
         logger.info(f"Starting investment_government_expenditure INVESTS relationship migration...")
-        logger.info(f"  Elements: SDG 2.a.1: Agriculture value added share of GDP, Share of Total Expenditure, SDG 2.a.1: Agriculture share of Government Expenditure, SDG 2.a.1: Agriculture Orientation Index (AOI) for Government Expenditure")
-        logger.info(f"  Properties: {'measure': 'agriculture_orientation_index', 'currency': 'local', 'element_code': '6197', 'element': 'SDG 2.a.1: Agriculture Orientation Index (AOI) for Government Expenditure'}")
+        
+        logger.info(f"  Filtering on element codes: 6131, 6197, 6111, 61060, 6110... (7 total)")
+        
+        logger.info(f"  Relationship type properties: {'element_codes': ['6131', '6197', '6111', '61060', '6110', '6184', '6224'], 'element': 'SDG 2.a.1: Agriculture share of Government Expenditure', 'element_code': '6131'}")
         
         try:
             # Execute the main migration
