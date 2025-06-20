@@ -15,8 +15,9 @@ class ProductionCropsLivestockProducesMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("production_crops_livestock", "relationship")
         self.relationship_type = "PRODUCES"
-        self.element_codes = ['5510', '5419', '5312']
-        self.elements = ['Production', 'Yield', 'Area harvested']
+        self.element_codes = ['5111', '5112', '5114', '5312', '5313', '5318', '5320', '5321', '5412', '5413', '5417', '5424', '5510', '5513']
+        self.elements = ['Stocks', 'Stocks', 'Stocks', 'Area harvested', 'Laying', 'Milk Animals', 'Producing Animals/Slaughtered', 'Producing Animals/Slaughtered', 'Yield', 'Yield', 'Yield/Carcass Weight', 'Yield/Carcass Weight', 'Production', 'Production']
+        self.relationship_properties = {"element": "Production", "element_code": "5513", "measure": "other"}
     
     def get_migration_query(self) -> str:
         return load_sql("production_crops_livestock_produces.cypher.sql", Path(__file__).parent)
@@ -30,19 +31,13 @@ class ProductionCropsLivestockProducesMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for production_crops_livestock PRODUCES relationships"""
         logger.info(f"Starting production_crops_livestock PRODUCES relationship migration...")
-        logger.info(f"  Elements: Production, Yield, Area harvested")
+        logger.info(f"  Elements: Stocks, Stocks, Stocks, Area harvested, Laying, Milk Animals, Producing Animals/Slaughtered, Producing Animals/Slaughtered, Yield, Yield, Yield/Carcass Weight, Yield/Carcass Weight, Production, Production")
+        logger.info(f"  Properties: {'measure': 'other', 'element_code': '5513', 'element': 'Production'}")
         
         try:
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:PRODUCES {",
-                    "CREATE (source)-[r:PRODUCES {source_dataset: 'production_crops_livestock', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} PRODUCES relationships from production_crops_livestock")

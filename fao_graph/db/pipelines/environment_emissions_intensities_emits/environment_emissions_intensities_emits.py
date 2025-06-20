@@ -15,8 +15,9 @@ class EnvironmentEmissionsIntensitiesEmitsMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("environment_emissions_intensities", "relationship")
         self.relationship_type = "EMITS"
-        self.element_codes = ['7231', '7230', '7229']
-        self.elements = ['Emissions (CO2)', 'Emissions (N2O)', 'Emissions (CH4)']
+        self.element_codes = ['5510', '71761', '723113']
+        self.elements = ['Production', 'Emissions intensity', 'Emissions (CO2eq) (AR5)']
+        self.relationship_properties = {"category": "general", "element": "Emissions (CO2eq) (AR5)", "element_code": "723113", "gas_type": "CO2", "source": "other"}
     
     def get_migration_query(self) -> str:
         return load_sql("environment_emissions_intensities_emits.cypher.sql", Path(__file__).parent)
@@ -30,19 +31,13 @@ class EnvironmentEmissionsIntensitiesEmitsMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for environment_emissions_intensities EMITS relationships"""
         logger.info(f"Starting environment_emissions_intensities EMITS relationship migration...")
-        logger.info(f"  Elements: Emissions (CO2), Emissions (N2O), Emissions (CH4)")
+        logger.info(f"  Elements: Production, Emissions intensity, Emissions (CO2eq) (AR5)")
+        logger.info(f"  Properties: {'source': 'other', 'gas_type': 'CO2', 'category': 'general', 'element_code': '723113', 'element': 'Emissions (CO2eq) (AR5)'}")
         
         try:
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:EMITS {",
-                    "CREATE (source)-[r:EMITS {source_dataset: 'environment_emissions_intensities', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} EMITS relationships from environment_emissions_intensities")

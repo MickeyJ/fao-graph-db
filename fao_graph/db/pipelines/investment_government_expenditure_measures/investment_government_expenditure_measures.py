@@ -15,8 +15,9 @@ class InvestmentGovernmentExpenditureMeasuresMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("investment_government_expenditure", "relationship")
         self.relationship_type = "MEASURES"
-        self.element_codes = ['5110']
-        self.elements = ['Value']
+        self.element_codes = ['6110', '6184', '6224']
+        self.elements = ['Value US$', 'Value US$, 2015 prices', 'Value Standard Local Currency']
+        self.relationship_properties = {"category": "financial", "element": "Value Standard Local Currency", "element_code": "6224", "flow_type": "government_expenditure"}
     
     def get_migration_query(self) -> str:
         return load_sql("investment_government_expenditure_measures.cypher.sql", Path(__file__).parent)
@@ -30,19 +31,13 @@ class InvestmentGovernmentExpenditureMeasuresMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for investment_government_expenditure MEASURES relationships"""
         logger.info(f"Starting investment_government_expenditure MEASURES relationship migration...")
-        logger.info(f"  Elements: Value")
+        logger.info(f"  Elements: Value US$, Value US$, 2015 prices, Value Standard Local Currency")
+        logger.info(f"  Properties: {'category': 'financial', 'flow_type': 'government_expenditure', 'element_code': '6224', 'element': 'Value Standard Local Currency'}")
         
         try:
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:MEASURES {",
-                    "CREATE (source)-[r:MEASURES {source_dataset: 'investment_government_expenditure', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} MEASURES relationships from investment_government_expenditure")

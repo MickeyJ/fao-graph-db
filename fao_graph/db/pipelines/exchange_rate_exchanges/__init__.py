@@ -1,0 +1,1 @@
+"""Migration pipeline for exchange_rate EXCHANGES relationships"""

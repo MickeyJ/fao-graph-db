@@ -1,0 +1,1 @@
+"""Migration pipeline for food_value"""

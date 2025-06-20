@@ -15,8 +15,9 @@ class ClimateChangeEmissionsIndicatorsEmitsMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("climate_change_emissions_indicators", "relationship")
         self.relationship_type = "EMITS"
-        self.element_codes = ['7231', '7230', '7229']
-        self.elements = ['Emissions (CO2)', 'Emissions (N2O)', 'Emissions (CH4)']
+        self.element_codes = ['7179', '726313', '7264', '7265', '7266', '7279', '72791', '72792']
+        self.elements = ['Emissions Share (CO2eq) (AR5) (F-gases)', 'Emissions Share (CO2eq) (AR5)', 'Emissions Share (CO2)', 'Emissions Share (CH4)', 'Emissions Share (N2O)', 'Emissions per capita', 'Emissions per value of agricultural production', 'Emissions per area of agricultural land']
+        self.relationship_properties = {"category": "general", "element": "Emissions per area of agricultural land", "element_code": "72792", "gas_type": "unspecified", "source": "other"}
     
     def get_migration_query(self) -> str:
         return load_sql("climate_change_emissions_indicators_emits.cypher.sql", Path(__file__).parent)
@@ -30,19 +31,13 @@ class ClimateChangeEmissionsIndicatorsEmitsMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for climate_change_emissions_indicators EMITS relationships"""
         logger.info(f"Starting climate_change_emissions_indicators EMITS relationship migration...")
-        logger.info(f"  Elements: Emissions (CO2), Emissions (N2O), Emissions (CH4)")
+        logger.info(f"  Elements: Emissions Share (CO2eq) (AR5) (F-gases), Emissions Share (CO2eq) (AR5), Emissions Share (CO2), Emissions Share (CH4), Emissions Share (N2O), Emissions per capita, Emissions per value of agricultural production, Emissions per area of agricultural land")
+        logger.info(f"  Properties: {'source': 'other', 'gas_type': 'unspecified', 'category': 'general', 'element_code': '72792', 'element': 'Emissions per area of agricultural land'}")
         
         try:
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:EMITS {",
-                    "CREATE (source)-[r:EMITS {source_dataset: 'climate_change_emissions_indicators', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} EMITS relationships from climate_change_emissions_indicators")

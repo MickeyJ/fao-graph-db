@@ -15,8 +15,9 @@ class EmissionsAgricultureEnergyEmitsMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("emissions_agriculture_energy", "relationship")
         self.relationship_type = "EMITS"
-        self.element_codes = ['7231', '7230', '7229']
-        self.elements = ['Emissions (CO2)', 'Emissions (N2O)', 'Emissions (CH4)']
+        self.element_codes = ['72184', '7225', '7230', '7273']
+        self.elements = ['Energy use in agriculture', 'Emissions (CH4)', 'Emissions (N2O)', 'Emissions (CO2)']
+        self.relationship_properties = {"category": "general", "element": "Emissions (CO2)", "element_code": "7273", "gas_type": "CO2", "source": "energy"}
     
     def get_migration_query(self) -> str:
         return load_sql("emissions_agriculture_energy_emits.cypher.sql", Path(__file__).parent)
@@ -30,19 +31,13 @@ class EmissionsAgricultureEnergyEmitsMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for emissions_agriculture_energy EMITS relationships"""
         logger.info(f"Starting emissions_agriculture_energy EMITS relationship migration...")
-        logger.info(f"  Elements: Emissions (CO2), Emissions (N2O), Emissions (CH4)")
+        logger.info(f"  Elements: Energy use in agriculture, Emissions (CH4), Emissions (N2O), Emissions (CO2)")
+        logger.info(f"  Properties: {'source': 'energy', 'gas_type': 'CO2', 'category': 'general', 'element_code': '7273', 'element': 'Emissions (CO2)'}")
         
         try:
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:EMITS {",
-                    "CREATE (source)-[r:EMITS {source_dataset: 'emissions_agriculture_energy', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} EMITS relationships from emissions_agriculture_energy")

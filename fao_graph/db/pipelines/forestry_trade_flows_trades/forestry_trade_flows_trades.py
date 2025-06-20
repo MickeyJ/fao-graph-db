@@ -33,13 +33,6 @@ class ForestryTradeFlowsTradesMigrator(GraphMigrationBase):
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:TRADES {",
-                    "CREATE (source)-[r:TRADES {source_dataset: 'forestry_trade_flows', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} TRADES relationships from forestry_trade_flows")

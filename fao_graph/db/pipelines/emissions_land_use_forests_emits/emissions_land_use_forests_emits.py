@@ -15,8 +15,9 @@ class EmissionsLandUseForestsEmitsMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("emissions_land_use_forests", "relationship")
         self.relationship_type = "EMITS"
-        self.element_codes = ['7231', '7230', '7229']
-        self.elements = ['Emissions (CO2)', 'Emissions (N2O)', 'Emissions (CH4)']
+        self.element_codes = ['5110', '72332']
+        self.elements = ['Area', 'Net emissions/removals (CO2) (Forest land)']
+        self.relationship_properties = {"category": "general", "element": "Net emissions/removals (CO2) (Forest land)", "element_code": "72332", "gas_type": "CO2", "source": "other"}
     
     def get_migration_query(self) -> str:
         return load_sql("emissions_land_use_forests_emits.cypher.sql", Path(__file__).parent)
@@ -30,19 +31,13 @@ class EmissionsLandUseForestsEmitsMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for emissions_land_use_forests EMITS relationships"""
         logger.info(f"Starting emissions_land_use_forests EMITS relationship migration...")
-        logger.info(f"  Elements: Emissions (CO2), Emissions (N2O), Emissions (CH4)")
+        logger.info(f"  Elements: Area, Net emissions/removals (CO2) (Forest land)")
+        logger.info(f"  Properties: {'source': 'other', 'gas_type': 'CO2', 'category': 'general', 'element_code': '72332', 'element': 'Net emissions/removals (CO2) (Forest land)'}")
         
         try:
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:EMITS {",
-                    "CREATE (source)-[r:EMITS {source_dataset: 'emissions_land_use_forests', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} EMITS relationships from emissions_land_use_forests")

@@ -15,8 +15,9 @@ class InputsFertilizersNutrientUsesMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("inputs_fertilizers_nutrient", "relationship")
         self.relationship_type = "USES"
-        self.element_codes = ['5157', '5159']
-        self.elements = ['Agricultural Use', 'Use per area of cropland']
+        self.element_codes = ['5157', '5159', '5172', '5173', '5510']
+        self.elements = ['Agricultural Use', 'Use per area of cropland', 'Use per capita', 'Use per value of agricultural production', 'Production']
+        self.relationship_properties = {"element": "Production", "element_code": "5510", "measure": "other", "resource": "fertilizer"}
     
     def get_migration_query(self) -> str:
         return load_sql("inputs_fertilizers_nutrient_uses.cypher.sql", Path(__file__).parent)
@@ -30,19 +31,13 @@ class InputsFertilizersNutrientUsesMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for inputs_fertilizers_nutrient USES relationships"""
         logger.info(f"Starting inputs_fertilizers_nutrient USES relationship migration...")
-        logger.info(f"  Elements: Agricultural Use, Use per area of cropland")
+        logger.info(f"  Elements: Agricultural Use, Use per area of cropland, Use per capita, Use per value of agricultural production, Production")
+        logger.info(f"  Properties: {'resource': 'fertilizer', 'measure': 'other', 'element_code': '5510', 'element': 'Production'}")
         
         try:
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:USES {",
-                    "CREATE (source)-[r:USES {source_dataset: 'inputs_fertilizers_nutrient', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} USES relationships from inputs_fertilizers_nutrient")

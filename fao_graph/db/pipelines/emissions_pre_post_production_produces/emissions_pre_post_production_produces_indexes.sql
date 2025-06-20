@@ -1,5 +1,14 @@
 -- Indexes for PRODUCES relationships from emissions_pre_post_production
 
+-- Index on relationship properties
+CREATE INDEX IF NOT EXISTS idx_emissions_pre_post_production_produces_measure
+ON fao_graph."PRODUCES" USING btree ((properties->>'measure'));
+CREATE INDEX IF NOT EXISTS idx_emissions_pre_post_production_produces_element_code
+ON fao_graph."PRODUCES" USING btree ((properties->>'element_code'));
+CREATE INDEX IF NOT EXISTS idx_emissions_pre_post_production_produces_element
+ON fao_graph."PRODUCES" USING btree ((properties->>'element'));
+
+-- Index on data properties
 CREATE INDEX IF NOT EXISTS idx_emissions_pre_post_production_produces_year
 ON fao_graph."PRODUCES" USING btree ((properties->>'year'));
 
@@ -7,5 +16,10 @@ ON fao_graph."PRODUCES" USING btree ((properties->>'year'));
 CREATE INDEX IF NOT EXISTS idx_emissions_pre_post_production_produces_value
 ON fao_graph."PRODUCES" USING btree ((properties->>'value'));
 
-CREATE INDEX IF NOT EXISTS idx_emissions_pre_post_production_produces_year_code
-ON fao_graph."PRODUCES" USING btree ((properties->>'year_code'));
+-- Compound index for common query patterns
+CREATE INDEX IF NOT EXISTS idx_emissions_pre_post_production_produces_compound
+ON fao_graph."PRODUCES" USING GIN (properties);
+
+-- Source dataset index for filtering
+CREATE INDEX IF NOT EXISTS idx_emissions_pre_post_production_produces_source
+ON fao_graph."PRODUCES" USING btree ((properties->>'source_dataset'));

@@ -15,8 +15,9 @@ class InputsLandUseUsesMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("inputs_land_use", "relationship")
         self.relationship_type = "USES"
-        self.element_codes = ['5157', '5159']
-        self.elements = ['Agricultural Use', 'Use per area of cropland']
+        self.element_codes = ['5110', '7208', '7209', '7210', '72151', '7252', '7277', '7278']
+        self.elements = ['Area', 'Share in Agricultural land', 'Share in Land area', 'Share in Forest land', 'Carbon stock in living biomass', 'Share in Cropland', 'Area per capita', 'Value of agricultural production (Int. $) per Area']
+        self.relationship_properties = {"element": "Value of agricultural production (Int. $) per Area", "element_code": "7278", "measure": "value", "resource": "inputs"}
     
     def get_migration_query(self) -> str:
         return load_sql("inputs_land_use_uses.cypher.sql", Path(__file__).parent)
@@ -30,19 +31,13 @@ class InputsLandUseUsesMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for inputs_land_use USES relationships"""
         logger.info(f"Starting inputs_land_use USES relationship migration...")
-        logger.info(f"  Elements: Agricultural Use, Use per area of cropland")
+        logger.info(f"  Elements: Area, Share in Agricultural land, Share in Land area, Share in Forest land, Carbon stock in living biomass, Share in Cropland, Area per capita, Value of agricultural production (Int. $) per Area")
+        logger.info(f"  Properties: {'resource': 'inputs', 'measure': 'value', 'element_code': '7278', 'element': 'Value of agricultural production (Int. $) per Area'}")
         
         try:
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:USES {",
-                    "CREATE (source)-[r:USES {source_dataset: 'inputs_land_use', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} USES relationships from inputs_land_use")

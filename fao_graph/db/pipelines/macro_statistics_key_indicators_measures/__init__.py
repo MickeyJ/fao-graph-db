@@ -1,0 +1,1 @@
+"""Migration pipeline for macro_statistics_key_indicators MEASURES relationships"""

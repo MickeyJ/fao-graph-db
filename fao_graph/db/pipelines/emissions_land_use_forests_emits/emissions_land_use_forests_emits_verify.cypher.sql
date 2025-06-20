@@ -1,17 +1,25 @@
 -- Verification queries for EMITS relationships
-SELECT count(*) FROM cypher('fao_graph', $
+SELECT count(*) FROM cypher('fao_graph', $$
     MATCH ()-[r:EMITS]->()
     WHERE r.source_dataset = 'emissions_land_use_forests'
     RETURN count(r)
-$) as (count agtype);
+$$) as (count agtype);
 
--- Sample relationships
-SELECT * FROM cypher('fao_graph', $
+-- Sample relationships with properties
+SELECT * FROM cypher('fao_graph', $$
     MATCH (s)-[r:EMITS]->(t)
     WHERE r.source_dataset = 'emissions_land_use_forests'
     RETURN s.name as source, 
            type(r) as relationship, 
-           t.name as target
-, r.year as year, r.value as value, r.unit as unit    LIMIT 10
-$) as (source agtype, relationship agtype, target agtype
-, year agtype, value agtype, unit agtype);
+           t.name as target,
+           r.source as source,
+           r.gas_type as gas_type,
+           r.category as category,
+           r.element_code as element_code,
+           r.element as element,
+           r.year as year,
+           r.value as value,
+           r.unit as unit
+    LIMIT 10
+$$) as (source agtype, relationship agtype, target agtype
+, source agtype, gas_type agtype, category agtype, element_code agtype, element agtype, year agtype, value agtype, unit agtype);

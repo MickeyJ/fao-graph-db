@@ -1,0 +1,1 @@
+"""Migration pipeline for inputs_fertilizers_product TRADES relationships"""

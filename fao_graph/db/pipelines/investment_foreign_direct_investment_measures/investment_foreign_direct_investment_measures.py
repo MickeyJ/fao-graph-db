@@ -15,8 +15,9 @@ class InvestmentForeignDirectInvestmentMeasuresMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("investment_foreign_direct_investment", "relationship")
         self.relationship_type = "MEASURES"
-        self.element_codes = ['5110']
-        self.elements = ['Value']
+        self.element_codes = ['6110', '6184']
+        self.elements = ['Value US$', 'Value US$, 2015 prices']
+        self.relationship_properties = {"category": "financial", "element": "Value US$, 2015 prices", "element_code": "6184", "flow_type": "foreign_direct_investment"}
     
     def get_migration_query(self) -> str:
         return load_sql("investment_foreign_direct_investment_measures.cypher.sql", Path(__file__).parent)
@@ -30,19 +31,13 @@ class InvestmentForeignDirectInvestmentMeasuresMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for investment_foreign_direct_investment MEASURES relationships"""
         logger.info(f"Starting investment_foreign_direct_investment MEASURES relationship migration...")
-        logger.info(f"  Elements: Value")
+        logger.info(f"  Elements: Value US$, Value US$, 2015 prices")
+        logger.info(f"  Properties: {'category': 'financial', 'flow_type': 'foreign_direct_investment', 'element_code': '6184', 'element': 'Value US$, 2015 prices'}")
         
         try:
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:MEASURES {",
-                    "CREATE (source)-[r:MEASURES {source_dataset: 'investment_foreign_direct_investment', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} MEASURES relationships from investment_foreign_direct_investment")

@@ -15,8 +15,9 @@ class SuaCropsLivestockMeasuresMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("sua_crops_livestock", "relationship")
         self.relationship_type = "MEASURES"
-        self.element_codes = ['5110']
-        self.elements = ['Value']
+        self.element_codes = ['261', '271', '281', '5016', '5023', '5071', '511', '5113', '5164', '5166', '5525']
+        self.elements = ['Calories/Year', 'Proteins/Year', 'Fats/Year', 'Loss', 'Processed', 'Stock Variation', 'Total Population - Both sexes', 'Opening stocks', 'Tourist consumption', 'Residuals', 'Seed']
+        self.relationship_properties = {"category": "food_balance", "element": "Seed", "element_code": "5525", "measure": "other"}
     
     def get_migration_query(self) -> str:
         return load_sql("sua_crops_livestock_measures.cypher.sql", Path(__file__).parent)
@@ -30,19 +31,13 @@ class SuaCropsLivestockMeasuresMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for sua_crops_livestock MEASURES relationships"""
         logger.info(f"Starting sua_crops_livestock MEASURES relationship migration...")
-        logger.info(f"  Elements: Value")
+        logger.info(f"  Elements: Calories/Year, Proteins/Year, Fats/Year, Loss, Processed, Stock Variation, Total Population - Both sexes, Opening stocks, Tourist consumption, Residuals, Seed")
+        logger.info(f"  Properties: {'category': 'food_balance', 'measure': 'other', 'element_code': '5525', 'element': 'Seed'}")
         
         try:
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:MEASURES {",
-                    "CREATE (source)-[r:MEASURES {source_dataset: 'sua_crops_livestock', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} MEASURES relationships from sua_crops_livestock")

@@ -15,8 +15,9 @@ class EmissionsPrePostProductionProducesMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("emissions_pre_post_production", "relationship")
         self.relationship_type = "PRODUCES"
-        self.element_codes = ['5510', '5419', '5312']
-        self.elements = ['Production', 'Yield', 'Area harvested']
+        self.element_codes = ['717815', '7225', '7230', '723113', '723116', '723117', '723118', '723119', '723120', '7273']
+        self.elements = ['Emissions (CO2eq) from F-gases (AR5)', 'Emissions (CH4)', 'Emissions (N2O)', 'Emissions (CO2eq) (AR5)', 'Energy Use (Natural Gas, including LNG)', 'Energy Use (Coal)', 'Energy Use (Electricity)', 'Energy Use (Heat)', 'Energy Use (Total)', 'Emissions (CO2)']
+        self.relationship_properties = {"element": "Emissions (CO2)", "element_code": "7273", "measure": "other"}
     
     def get_migration_query(self) -> str:
         return load_sql("emissions_pre_post_production_produces.cypher.sql", Path(__file__).parent)
@@ -30,19 +31,13 @@ class EmissionsPrePostProductionProducesMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for emissions_pre_post_production PRODUCES relationships"""
         logger.info(f"Starting emissions_pre_post_production PRODUCES relationship migration...")
-        logger.info(f"  Elements: Production, Yield, Area harvested")
+        logger.info(f"  Elements: Emissions (CO2eq) from F-gases (AR5), Emissions (CH4), Emissions (N2O), Emissions (CO2eq) (AR5), Energy Use (Natural Gas, including LNG), Energy Use (Coal), Energy Use (Electricity), Energy Use (Heat), Energy Use (Total), Emissions (CO2)")
+        logger.info(f"  Properties: {'measure': 'other', 'element_code': '7273', 'element': 'Emissions (CO2)'}")
         
         try:
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:PRODUCES {",
-                    "CREATE (source)-[r:PRODUCES {source_dataset: 'emissions_pre_post_production', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} PRODUCES relationships from emissions_pre_post_production")

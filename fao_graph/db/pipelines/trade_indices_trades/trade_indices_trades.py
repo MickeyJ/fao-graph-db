@@ -15,8 +15,9 @@ class TradeIndicesTradesMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("trade_indices", "relationship")
         self.relationship_type = "TRADES"
-        self.element_codes = ['5610', '5622', '5910', '5922']
-        self.elements = ['Import quantity', 'Import value', 'Export quantity', 'Export value']
+        self.element_codes = ['462', '464', '465', '492', '494', '495', '64', '65', '94', '95']
+        self.elements = ['Import Value Index (2014-2016 = 100)', 'Import Unit/Value Index (2014-2016 = 100)', 'Import Quantity Index (2014-2016 = 100)', 'Export Value Index (2014-2016 = 100)', 'Export Unit/Value Index (2014-2016 = 100)', 'Export Quantity Index (2014-2016 = 100)', 'Import Value Base Period Quantity', 'Import Value Base Period Price', 'Export Value Base Quantity', 'Export Value Base Price']
+        self.relationship_properties = {"element": "Export Value Base Price", "element_code": "95", "flow": "export", "measure": "value"}
     
     def get_migration_query(self) -> str:
         return load_sql("trade_indices_trades.cypher.sql", Path(__file__).parent)
@@ -30,19 +31,13 @@ class TradeIndicesTradesMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for trade_indices TRADES relationships"""
         logger.info(f"Starting trade_indices TRADES relationship migration...")
-        logger.info(f"  Elements: Import quantity, Import value, Export quantity, Export value")
+        logger.info(f"  Elements: Import Value Index (2014-2016 = 100), Import Unit/Value Index (2014-2016 = 100), Import Quantity Index (2014-2016 = 100), Export Value Index (2014-2016 = 100), Export Unit/Value Index (2014-2016 = 100), Export Quantity Index (2014-2016 = 100), Import Value Base Period Quantity, Import Value Base Period Price, Export Value Base Quantity, Export Value Base Price")
+        logger.info(f"  Properties: {'flow': 'export', 'measure': 'value', 'element_code': '95', 'element': 'Export Value Base Price'}")
         
         try:
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:TRADES {",
-                    "CREATE (source)-[r:TRADES {source_dataset: 'trade_indices', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} TRADES relationships from trade_indices")

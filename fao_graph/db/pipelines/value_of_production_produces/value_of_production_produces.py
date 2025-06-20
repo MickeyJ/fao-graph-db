@@ -15,8 +15,9 @@ class ValueOfProductionProducesMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("value_of_production", "relationship")
         self.relationship_type = "PRODUCES"
-        self.element_codes = ['5510', '5419', '5312']
-        self.elements = ['Production', 'Yield', 'Area harvested']
+        self.element_codes = ['152', '55', '56', '57', '58']
+        self.elements = ['Gross Production Value (constant 2014-2016 thousand I$)', 'Gross Production Value (constant 2014-2016 thousand SLC)', 'Gross Production Value (current thousand SLC)', 'Gross Production Value (current thousand US$)', 'Gross Production Value (constant 2014-2016 thousand US$)']
+        self.relationship_properties = {"element": "Gross Production Value (constant 2014-2016 thousand US$)", "element_code": "58", "measure": "value"}
     
     def get_migration_query(self) -> str:
         return load_sql("value_of_production_produces.cypher.sql", Path(__file__).parent)
@@ -30,19 +31,13 @@ class ValueOfProductionProducesMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for value_of_production PRODUCES relationships"""
         logger.info(f"Starting value_of_production PRODUCES relationship migration...")
-        logger.info(f"  Elements: Production, Yield, Area harvested")
+        logger.info(f"  Elements: Gross Production Value (constant 2014-2016 thousand I$), Gross Production Value (constant 2014-2016 thousand SLC), Gross Production Value (current thousand SLC), Gross Production Value (current thousand US$), Gross Production Value (constant 2014-2016 thousand US$)")
+        logger.info(f"  Properties: {'measure': 'value', 'element_code': '58', 'element': 'Gross Production Value (constant 2014-2016 thousand US$)'}")
         
         try:
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:PRODUCES {",
-                    "CREATE (source)-[r:PRODUCES {source_dataset: 'value_of_production', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} PRODUCES relationships from value_of_production")

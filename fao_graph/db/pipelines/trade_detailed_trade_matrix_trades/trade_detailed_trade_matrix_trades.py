@@ -33,13 +33,6 @@ class TradeDetailedTradeMatrixTradesMigrator(GraphMigrationBase):
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:TRADES {",
-                    "CREATE (source)-[r:TRADES {source_dataset: 'trade_detailed_trade_matrix', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} TRADES relationships from trade_detailed_trade_matrix")

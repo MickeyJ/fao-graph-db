@@ -15,8 +15,9 @@ class ConsumerPriceIndicesMeasuresMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("consumer_price_indices", "relationship")
         self.relationship_type = "MEASURES"
-        self.element_codes = ['5110']
-        self.elements = ['Value']
+        self.element_codes = ['6121', '6125']
+        self.elements = ['Value', 'Value']
+        self.relationship_properties = {"category": "price", "currency": "local", "element": "Value", "element_code": "6125", "price_type": "consumer"}
     
     def get_migration_query(self) -> str:
         return load_sql("consumer_price_indices_measures.cypher.sql", Path(__file__).parent)
@@ -30,19 +31,13 @@ class ConsumerPriceIndicesMeasuresMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for consumer_price_indices MEASURES relationships"""
         logger.info(f"Starting consumer_price_indices MEASURES relationship migration...")
-        logger.info(f"  Elements: Value")
+        logger.info(f"  Elements: Value, Value")
+        logger.info(f"  Properties: {'category': 'price', 'price_type': 'consumer', 'currency': 'local', 'element_code': '6125', 'element': 'Value'}")
         
         try:
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:MEASURES {",
-                    "CREATE (source)-[r:MEASURES {source_dataset: 'consumer_price_indices', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} MEASURES relationships from consumer_price_indices")

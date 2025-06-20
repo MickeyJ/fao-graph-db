@@ -15,8 +15,9 @@ class InputsFertilizersArchiveUsesMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("inputs_fertilizers_archive", "relationship")
         self.relationship_type = "USES"
-        self.element_codes = ['5157', '5159']
-        self.elements = ['Agricultural Use', 'Use per area of cropland']
+        self.element_codes = ['5157', '5510', '5751']
+        self.elements = ['Agricultural Use', 'Production', 'Prices Paid by Farmers']
+        self.relationship_properties = {"element": "Prices Paid by Farmers", "element_code": "5751", "measure": "other", "resource": "fertilizer"}
     
     def get_migration_query(self) -> str:
         return load_sql("inputs_fertilizers_archive_uses.cypher.sql", Path(__file__).parent)
@@ -30,19 +31,13 @@ class InputsFertilizersArchiveUsesMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for inputs_fertilizers_archive USES relationships"""
         logger.info(f"Starting inputs_fertilizers_archive USES relationship migration...")
-        logger.info(f"  Elements: Agricultural Use, Use per area of cropland")
+        logger.info(f"  Elements: Agricultural Use, Production, Prices Paid by Farmers")
+        logger.info(f"  Properties: {'resource': 'fertilizer', 'measure': 'other', 'element_code': '5751', 'element': 'Prices Paid by Farmers'}")
         
         try:
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:USES {",
-                    "CREATE (source)-[r:USES {source_dataset: 'inputs_fertilizers_archive', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} USES relationships from inputs_fertilizers_archive")

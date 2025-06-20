@@ -15,8 +15,9 @@ class ProductionIndicesProducesMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("production_indices", "relationship")
         self.relationship_type = "PRODUCES"
-        self.element_codes = ['5510', '5419', '5312']
-        self.elements = ['Production', 'Yield', 'Area harvested']
+        self.element_codes = ['432', '434']
+        self.elements = ['Gross Production Index Number (2014-2016 = 100)', 'Gross per capita Production Index Number (2014-2016 = 100)']
+        self.relationship_properties = {"element": "Gross per capita Production Index Number (2014-2016 = 100)", "element_code": "434", "measure": "per_capita"}
     
     def get_migration_query(self) -> str:
         return load_sql("production_indices_produces.cypher.sql", Path(__file__).parent)
@@ -30,19 +31,13 @@ class ProductionIndicesProducesMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for production_indices PRODUCES relationships"""
         logger.info(f"Starting production_indices PRODUCES relationship migration...")
-        logger.info(f"  Elements: Production, Yield, Area harvested")
+        logger.info(f"  Elements: Gross Production Index Number (2014-2016 = 100), Gross per capita Production Index Number (2014-2016 = 100)")
+        logger.info(f"  Properties: {'measure': 'per_capita', 'element_code': '434', 'element': 'Gross per capita Production Index Number (2014-2016 = 100)'}")
         
         try:
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:PRODUCES {",
-                    "CREATE (source)-[r:PRODUCES {source_dataset: 'production_indices', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} PRODUCES relationships from production_indices")

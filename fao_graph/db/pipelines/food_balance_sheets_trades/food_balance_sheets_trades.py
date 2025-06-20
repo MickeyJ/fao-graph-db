@@ -17,6 +17,7 @@ class FoodBalanceSheetsTradesMigrator(GraphMigrationBase):
         self.relationship_type = "TRADES"
         self.element_codes = ['5611', '5911']
         self.elements = ['Import quantity', 'Export quantity']
+        self.relationship_properties = {"element": "Export quantity", "element_code": "5911", "flow": "export", "measure": "quantity"}
     
     def get_migration_query(self) -> str:
         return load_sql("food_balance_sheets_trades.cypher.sql", Path(__file__).parent)
@@ -31,18 +32,12 @@ class FoodBalanceSheetsTradesMigrator(GraphMigrationBase):
         """Execute the migration for food_balance_sheets TRADES relationships"""
         logger.info(f"Starting food_balance_sheets TRADES relationship migration...")
         logger.info(f"  Elements: Import quantity, Export quantity")
+        logger.info(f"  Properties: {'flow': 'export', 'measure': 'quantity', 'element_code': '5911', 'element': 'Export quantity'}")
         
         try:
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:TRADES {",
-                    "CREATE (source)-[r:TRADES {source_dataset: 'food_balance_sheets', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} TRADES relationships from food_balance_sheets")

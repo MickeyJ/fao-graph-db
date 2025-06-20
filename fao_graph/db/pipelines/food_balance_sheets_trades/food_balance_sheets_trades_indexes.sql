@@ -1,5 +1,16 @@
 -- Indexes for TRADES relationships from food_balance_sheets
 
+-- Index on relationship properties
+CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_trades_flow
+ON fao_graph."TRADES" USING btree ((properties->>'flow'));
+CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_trades_measure
+ON fao_graph."TRADES" USING btree ((properties->>'measure'));
+CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_trades_element_code
+ON fao_graph."TRADES" USING btree ((properties->>'element_code'));
+CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_trades_element
+ON fao_graph."TRADES" USING btree ((properties->>'element'));
+
+-- Index on data properties
 CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_trades_year
 ON fao_graph."TRADES" USING btree ((properties->>'year'));
 
@@ -7,5 +18,10 @@ ON fao_graph."TRADES" USING btree ((properties->>'year'));
 CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_trades_value
 ON fao_graph."TRADES" USING btree ((properties->>'value'));
 
-CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_trades_year_code
-ON fao_graph."TRADES" USING btree ((properties->>'year_code'));
+-- Compound index for common query patterns
+CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_trades_compound
+ON fao_graph."TRADES" USING GIN (properties);
+
+-- Source dataset index for filtering
+CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_trades_source
+ON fao_graph."TRADES" USING btree ((properties->>'source_dataset'));

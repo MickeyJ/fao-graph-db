@@ -15,8 +15,9 @@ class PricesMeasuresMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("prices", "relationship")
         self.relationship_type = "MEASURES"
-        self.element_codes = ['5530', '5532']
-        self.elements = ['Producer Price (LCU/tonne)', 'Producer Price (USD/tonne)']
+        self.element_codes = ['5530', '5531', '5532', '5539']
+        self.elements = ['Producer Price (LCU/tonne)', 'Producer Price (SLC/tonne)', 'Producer Price (USD/tonne)', 'Producer Price Index (2014-2016 = 100)']
+        self.relationship_properties = {"category": "price", "currency": "local", "element": "Producer Price Index (2014-2016 = 100)", "element_code": "5539", "price_type": "producer"}
     
     def get_migration_query(self) -> str:
         return load_sql("prices_measures.cypher.sql", Path(__file__).parent)
@@ -30,19 +31,13 @@ class PricesMeasuresMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for prices MEASURES relationships"""
         logger.info(f"Starting prices MEASURES relationship migration...")
-        logger.info(f"  Elements: Producer Price (LCU/tonne), Producer Price (USD/tonne)")
+        logger.info(f"  Elements: Producer Price (LCU/tonne), Producer Price (SLC/tonne), Producer Price (USD/tonne), Producer Price Index (2014-2016 = 100)")
+        logger.info(f"  Properties: {'category': 'price', 'price_type': 'producer', 'currency': 'local', 'element_code': '5539', 'element': 'Producer Price Index (2014-2016 = 100)'}")
         
         try:
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:MEASURES {",
-                    "CREATE (source)-[r:MEASURES {source_dataset: 'prices', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} MEASURES relationships from prices")

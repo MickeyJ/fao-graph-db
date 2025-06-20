@@ -15,8 +15,9 @@ class EmissionsTotalsEmitsMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("emissions_totals", "relationship")
         self.relationship_type = "EMITS"
-        self.element_codes = ['7231', '7230', '7229']
-        self.elements = ['Emissions (CO2)', 'Emissions (N2O)', 'Emissions (CH4)']
+        self.element_codes = ['717815', '7225', '7230', '723113', '7234', '7236', '724313', '724413', '7273']
+        self.elements = ['Emissions (CO2eq) from F-gases (AR5)', 'Emissions (CH4)', 'Emissions (N2O)', 'Emissions (CO2eq) (AR5)', 'Direct emissions (N2O)', 'Indirect emissions (N2O)', 'Emissions (CO2eq) from N2O (AR5)', 'Emissions (CO2eq) from CH4 (AR5)', 'Emissions (CO2)']
+        self.relationship_properties = {"category": "general", "element": "Emissions (CO2)", "element_code": "7273", "gas_type": "CO2", "source": "other"}
     
     def get_migration_query(self) -> str:
         return load_sql("emissions_totals_emits.cypher.sql", Path(__file__).parent)
@@ -30,19 +31,13 @@ class EmissionsTotalsEmitsMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for emissions_totals EMITS relationships"""
         logger.info(f"Starting emissions_totals EMITS relationship migration...")
-        logger.info(f"  Elements: Emissions (CO2), Emissions (N2O), Emissions (CH4)")
+        logger.info(f"  Elements: Emissions (CO2eq) from F-gases (AR5), Emissions (CH4), Emissions (N2O), Emissions (CO2eq) (AR5), Direct emissions (N2O), Indirect emissions (N2O), Emissions (CO2eq) from N2O (AR5), Emissions (CO2eq) from CH4 (AR5), Emissions (CO2)")
+        logger.info(f"  Properties: {'source': 'other', 'gas_type': 'CO2', 'category': 'general', 'element_code': '7273', 'element': 'Emissions (CO2)'}")
         
         try:
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:EMITS {",
-                    "CREATE (source)-[r:EMITS {source_dataset: 'emissions_totals', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} EMITS relationships from emissions_totals")

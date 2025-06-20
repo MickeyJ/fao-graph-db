@@ -15,8 +15,9 @@ class FoodBalanceSheetsUsesMigrator(GraphMigrationBase):
     def __init__(self):
         super().__init__("food_balance_sheets", "relationship")
         self.relationship_type = "USES"
-        self.element_codes = ['5142', '5521']
-        self.elements = ['Food', 'Feed']
+        self.element_codes = ['5142', '5154', '5521', '645', '661', '664']
+        self.elements = ['Food', 'Other uses (non-food)', 'Feed', 'Food supply quantity (kg/capita/yr)', 'Food supply (kcal)', 'Food supply (kcal/capita/day)']
+        self.relationship_properties = {"element": "Food supply (kcal/capita/day)", "element_code": "664", "purpose": "food", "resource": "food_supply"}
     
     def get_migration_query(self) -> str:
         return load_sql("food_balance_sheets_uses.cypher.sql", Path(__file__).parent)
@@ -30,19 +31,13 @@ class FoodBalanceSheetsUsesMigrator(GraphMigrationBase):
     def migrate(self, start_offset: int = 0, mode: str = "create") -> None:
         """Execute the migration for food_balance_sheets USES relationships"""
         logger.info(f"Starting food_balance_sheets USES relationship migration...")
-        logger.info(f"  Elements: Food, Feed")
+        logger.info(f"  Elements: Food, Other uses (non-food), Feed, Food supply quantity (kg/capita/yr), Food supply (kcal), Food supply (kcal/capita/day)")
+        logger.info(f"  Properties: {'resource': 'food_supply', 'purpose': 'food', 'element_code': '664', 'element': 'Food supply (kcal/capita/day)'}")
         
         try:
             # Execute the main migration
             with get_session() as session:
                 query = self.get_migration_query()
-                
-                # Add source_table property for tracking
-                query = query.replace(
-                    "CREATE (source)-[r:USES {",
-                    "CREATE (source)-[r:USES {source_dataset: 'food_balance_sheets', "
-                )
-                
                 result = session.execute(text(query)).fetchall()
                 self.created = len(result)
                 logger.info(f"Created {self.created} USES relationships from food_balance_sheets")
