@@ -15,10 +15,11 @@ SELECT * FROM cypher('fao_graph', $$
            r.indicator_codes as indicator_codes,
            r.indicator as indicator,
            r.indicator_code as indicator_code,
+           r.indicators as indicators,
            r.nutrient_type as nutrient_type,
            r.year as year,
            r.value as value,
            r.unit as unit
     LIMIT 10
 $$) as (source agtype, relationship agtype, target agtype
-, indicator_codes agtype, indicator agtype, indicator_code agtype, nutrient_type agtype, year agtype, value agtype, unit agtype);
+, indicator_codes agtype, indicator agtype, indicator_code agtype, indicators agtype, nutrient_type agtype, year agtype, value agtype, unit agtype);

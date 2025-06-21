@@ -15,10 +15,11 @@ SELECT * FROM cypher('fao_graph', $$
            r.industry_codes as industry_codes,
            r.industry as industry,
            r.industry_code as industry_code,
+           r.industries as industries,
            r.flow_direction as flow_direction,
            r.year as year,
            r.value as value,
            r.unit as unit
     LIMIT 10
 $$) as (source agtype, relationship agtype, target agtype
-, industry_codes agtype, industry agtype, industry_code agtype, flow_direction agtype, year agtype, value agtype, unit agtype);
+, industry_codes agtype, industry agtype, industry_code agtype, industries agtype, flow_direction agtype, year agtype, value agtype, unit agtype);

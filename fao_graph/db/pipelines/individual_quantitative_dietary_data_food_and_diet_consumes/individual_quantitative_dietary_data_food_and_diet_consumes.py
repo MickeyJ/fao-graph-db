@@ -18,7 +18,7 @@ class IndividualQuantitativeDietaryDataFoodAndDietConsumesMigrator(GraphMigratio
         
         self.indicator_codes = ['3321', '3329', '3331', '3332', '3334', '3335', '3336', '3337', '3338', '3339', '3341', '3342', '3320']
         
-        self.relationship_properties = {"indicator": "Food consumption, consumers only", "indicator_code": "3321", "indicator_codes": ["3321", "3329", "3331", "3332", "3334", "3335", "3336", "3337", "3338", "3339", "3341", "3342", "3320"]}
+        self.relationship_properties = {"indicator": "Food consumption, consumers only", "indicator_code": "3321", "indicator_codes": ["3321", "3329", "3331", "3332", "3334", "3335", "3336", "3337", "3338", "3339", "3341", "3342", "3320"], "indicators": true}
     
     def get_migration_query(self) -> str:
         return load_sql("individual_quantitative_dietary_data_food_and_diet_consumes.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class IndividualQuantitativeDietaryDataFoodAndDietConsumesMigrator(GraphMigratio
         
         logger.info(f"  Filtering on indicator codes: 3321, 3329, 3331, 3332, 3334... (13 total)")
         
-        logger.info(f"  Relationship type properties: {'indicator_codes': ['3321', '3329', '3331', '3332', '3334', '3335', '3336', '3337', '3338', '3339', '3341', '3342', '3320'], 'indicator': 'Food consumption, consumers only', 'indicator_code': '3321'}")
+        logger.info(f"  Relationship type properties: {'indicator_codes': ['3321', '3329', '3331', '3332', '3334', '3335', '3336', '3337', '3338', '3339', '3341', '3342', '3320'], 'indicator': 'Food consumption, consumers only', 'indicator_code': '3321', 'indicators': True}")
         
         try:
             # Execute the main migration

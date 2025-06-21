@@ -18,7 +18,7 @@ class AstiResearchersEmploysMigrator(GraphMigrationBase):
         
         self.element_codes = ['6082', '6086']
         
-        self.relationship_properties = {"element": "Researchers, total", "element_code": "6082", "element_codes": ["6082", "6086"]}
+        self.relationship_properties = {"element": "Researchers, total", "element_code": "6082", "element_codes": ["6082", "6086"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("asti_researchers_employs.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class AstiResearchersEmploysMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 6082, 6086")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['6082', '6086'], 'element': 'Researchers, total', 'element_code': '6082'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['6082', '6086'], 'element': 'Researchers, total', 'element_code': '6082', 'elements': True}")
         
         try:
             # Execute the main migration

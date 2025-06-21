@@ -18,7 +18,7 @@ class InvestmentCapitalStockInvestsMigrator(GraphMigrationBase):
         
         self.element_codes = ['61391', '61392', '61393', '61394', '6110', '61120', '6159', '6184', '6193', '61940', '6224', '6225']
         
-        self.relationship_properties = {"element": "Share of Gross Fixed Capital Formation US$", "element_code": "61391", "element_codes": ["61391", "61392", "61393", "61394", "6110", "61120", "6159", "6184", "6193", "61940", "6224", "6225"]}
+        self.relationship_properties = {"element": "Share of Gross Fixed Capital Formation US$", "element_code": "61391", "element_codes": ["61391", "61392", "61393", "61394", "6110", "61120", "6159", "6184", "6193", "61940", "6224", "6225"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("investment_capital_stock_invests.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class InvestmentCapitalStockInvestsMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 61391, 61392, 61393, 61394, 6110... (12 total)")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['61391', '61392', '61393', '61394', '6110', '61120', '6159', '6184', '6193', '61940', '6224', '6225'], 'element': 'Share of Gross Fixed Capital Formation US$', 'element_code': '61391'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['61391', '61392', '61393', '61394', '6110', '61120', '6159', '6184', '6193', '61940', '6224', '6225'], 'element': 'Share of Gross Fixed Capital Formation US$', 'element_code': '61391', 'elements': True}")
         
         try:
             # Execute the main migration

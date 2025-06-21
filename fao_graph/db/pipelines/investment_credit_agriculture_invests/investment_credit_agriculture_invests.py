@@ -18,7 +18,7 @@ class InvestmentCreditAgricultureInvestsMigrator(GraphMigrationBase):
         
         self.element_codes = ['61133', '6110', '6184', '6193', '6224', '6225']
         
-        self.relationship_properties = {"element": "Share of Total Credit US$, 2015 prices", "element_code": "61133", "element_codes": ["61133", "6110", "6184", "6193", "6224", "6225"]}
+        self.relationship_properties = {"element": "Share of Total Credit US$, 2015 prices", "element_code": "61133", "element_codes": ["61133", "6110", "6184", "6193", "6224", "6225"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("investment_credit_agriculture_invests.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class InvestmentCreditAgricultureInvestsMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 61133, 6110, 6184, 6193, 6224... (6 total)")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['61133', '6110', '6184', '6193', '6224', '6225'], 'element': 'Share of Total Credit US$, 2015 prices', 'element_code': '61133'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['61133', '6110', '6184', '6193', '6224', '6225'], 'element': 'Share of Total Credit US$, 2015 prices', 'element_code': '61133', 'elements': True}")
         
         try:
             # Execute the main migration

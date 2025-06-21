@@ -7,6 +7,8 @@ CREATE INDEX IF NOT EXISTS idx_individual_quantitative_dietary_data_food_and_die
 ON fao_graph."SUPPLIES" USING btree ((properties->>'element'));
 CREATE INDEX IF NOT EXISTS idx_individual_quantitative_dietary_data_food_and_diet_supplies_element_code
 ON fao_graph."SUPPLIES" USING btree ((properties->>'element_code'));
+CREATE INDEX IF NOT EXISTS idx_individual_quantitative_dietary_data_food_and_diet_supplies_elements
+ON fao_graph."SUPPLIES" USING btree ((properties->>'elements'));
 
 -- Index on data properties
 

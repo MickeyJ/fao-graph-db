@@ -4,11 +4,15 @@ SELECT * FROM cypher('fao_graph', $$
     MATCH (target:Sources {id: row.source_code_id})
     CREATE (source)-[r:EMPLOYS {
         -- Dynamic properties from row
-        indicator_code_id: row.indicator_code_id,
-        year: row.year,
-        value: row.value,
-        unit: row.unit,
-        -- Metadata
+        -- indicator_codes: row.indicator_codes,
+        -- indicator: row.indicator,
+        -- indicator_code: row.indicator_code,
+        -- indicators: row.indicators,
+        indicator_code_id: row.indicator_code_id, 
+        year: row.year, 
+        unit: row.unit, 
+        value: row.value, 
+        note: row.note,        -- Metadata
         source_dataset: 'employment_indicators_agriculture'
     }]->(target)
     RETURN r
@@ -19,3 +23,5 @@ WHERE row.area_code_id IS NOT NULL
   AND row.value > 0
   AND row.indicator_code IN (21110, 21066, 21086, 21088, 21089, 21090, 21091, 21093, 21097, 21100, 21107, 21111, 21144)
 ;
+
+

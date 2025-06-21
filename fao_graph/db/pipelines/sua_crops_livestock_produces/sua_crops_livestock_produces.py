@@ -18,7 +18,7 @@ class SuaCropsLivestockProducesMigrator(GraphMigrationBase):
         
         self.element_codes = ['5510', '5113', '261', '271', '281', '5016', '5023', '5071', '5141', '5164', '5165', '5166', '5520', '5525', '664', '665', '674', '684', '511']
         
-        self.relationship_properties = {"element": "Production", "element_code": "5510", "element_codes": ["5510", "5113", "261", "271", "281", "5016", "5023", "5071", "5141", "5164", "5165", "5166", "5520", "5525", "664", "665", "674", "684", "511"]}
+        self.relationship_properties = {"element": "Production", "element_code": "5510", "element_codes": ["5510", "5113", "261", "271", "281", "5016", "5023", "5071", "5141", "5164", "5165", "5166", "5520", "5525", "664", "665", "674", "684", "511"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("sua_crops_livestock_produces.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class SuaCropsLivestockProducesMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 5510, 5113, 261, 271, 281... (19 total)")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['5510', '5113', '261', '271', '281', '5016', '5023', '5071', '5141', '5164', '5165', '5166', '5520', '5525', '664', '665', '674', '684', '511'], 'element': 'Production', 'element_code': '5510'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['5510', '5113', '261', '271', '281', '5016', '5023', '5071', '5141', '5164', '5165', '5166', '5520', '5525', '664', '665', '674', '684', '511'], 'element': 'Production', 'element_code': '5510', 'elements': True}")
         
         try:
             # Execute the main migration

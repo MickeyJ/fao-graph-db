@@ -18,7 +18,7 @@ class InvestmentMachineryArchiveUtilizesMigrator(GraphMigrationBase):
         
         self.element_codes = ['5116']
         
-        self.relationship_properties = {"element": "In Use", "element_code": "5116", "element_codes": ["5116"]}
+        self.relationship_properties = {"element": "In Use", "element_code": "5116", "element_codes": ["5116"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("investment_machinery_archive_utilizes.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class InvestmentMachineryArchiveUtilizesMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 5116")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['5116'], 'element': 'In Use', 'element_code': '5116'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['5116'], 'element': 'In Use', 'element_code': '5116', 'elements': True}")
         
         try:
             # Execute the main migration

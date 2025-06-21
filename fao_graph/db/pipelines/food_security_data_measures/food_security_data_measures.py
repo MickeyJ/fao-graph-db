@@ -18,7 +18,7 @@ class FoodSecurityDataMeasuresMigrator(GraphMigrationBase):
         
         self.element_codes = ['61212', '61322', '61211', '61321']
         
-        self.relationship_properties = {"element": "Confidence interval: Upper bound", "element_code": "61212", "element_codes": ["61212", "61322", "61211", "61321"]}
+        self.relationship_properties = {"element": "Confidence interval: Upper bound", "element_code": "61212", "element_codes": ["61212", "61322", "61211", "61321"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("food_security_data_measures.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class FoodSecurityDataMeasuresMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 61212, 61322, 61211, 61321")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['61212', '61322', '61211', '61321'], 'element': 'Confidence interval: Upper bound', 'element_code': '61212'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['61212', '61322', '61211', '61321'], 'element': 'Confidence interval: Upper bound', 'element_code': '61212', 'elements': True}")
         
         try:
             # Execute the main migration

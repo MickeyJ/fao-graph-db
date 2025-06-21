@@ -18,7 +18,7 @@ class EmissionsPrePostProductionUtilizesMigrator(GraphMigrationBase):
         
         self.element_codes = ['723116', '723117', '723118', '723119', '723120']
         
-        self.relationship_properties = {"element": "Energy Use (Natural Gas, including LNG)", "element_code": "723116", "element_codes": ["723116", "723117", "723118", "723119", "723120"]}
+        self.relationship_properties = {"element": "Energy Use (Natural Gas, including LNG)", "element_code": "723116", "element_codes": ["723116", "723117", "723118", "723119", "723120"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("emissions_pre_post_production_utilizes.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class EmissionsPrePostProductionUtilizesMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 723116, 723117, 723118, 723119, 723120")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['723116', '723117', '723118', '723119', '723120'], 'element': 'Energy Use (Natural Gas, including LNG)', 'element_code': '723116'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['723116', '723117', '723118', '723119', '723120'], 'element': 'Energy Use (Natural Gas, including LNG)', 'element_code': '723116', 'elements': True}")
         
         try:
             # Execute the main migration

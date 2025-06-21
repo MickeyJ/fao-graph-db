@@ -18,7 +18,7 @@ class InputsFertilizersProductUtilizesMigrator(GraphMigrationBase):
         
         self.element_codes = ['5157', '5510']
         
-        self.relationship_properties = {"element": "Agricultural Use", "element_code": "5157", "element_codes": ["5157", "5510"]}
+        self.relationship_properties = {"element": "Agricultural Use", "element_code": "5157", "element_codes": ["5157", "5510"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("inputs_fertilizers_product_utilizes.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class InputsFertilizersProductUtilizesMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 5157, 5510")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['5157', '5510'], 'element': 'Agricultural Use', 'element_code': '5157'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['5157', '5510'], 'element': 'Agricultural Use', 'element_code': '5157', 'elements': True}")
         
         try:
             # Execute the main migration

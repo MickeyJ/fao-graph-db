@@ -18,7 +18,7 @@ class InputsLandUseEmitsMigrator(GraphMigrationBase):
         
         self.element_codes = ['72151']
         
-        self.relationship_properties = {"element": "Carbon stock in living biomass", "element_code": "72151", "element_codes": ["72151"]}
+        self.relationship_properties = {"element": "Carbon stock in living biomass", "element_code": "72151", "element_codes": ["72151"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("inputs_land_use_emits.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class InputsLandUseEmitsMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 72151")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['72151'], 'element': 'Carbon stock in living biomass', 'element_code': '72151'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['72151'], 'element': 'Carbon stock in living biomass', 'element_code': '72151', 'elements': True}")
         
         try:
             # Execute the main migration

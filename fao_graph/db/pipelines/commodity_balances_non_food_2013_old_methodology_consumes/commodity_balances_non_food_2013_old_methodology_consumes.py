@@ -18,7 +18,7 @@ class CommodityBalancesNonFood2013OldMethodologyConsumesMigrator(GraphMigrationB
         
         self.element_codes = ['5141', '5520']
         
-        self.relationship_properties = {"element": "Food supply quantity (tonnes)", "element_code": "5141", "element_codes": ["5141", "5520"]}
+        self.relationship_properties = {"element": "Food supply quantity (tonnes)", "element_code": "5141", "element_codes": ["5141", "5520"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("commodity_balances_non_food_2013_old_methodology_consumes.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class CommodityBalancesNonFood2013OldMethodologyConsumesMigrator(GraphMigrationB
         
         logger.info(f"  Filtering on element codes: 5141, 5520")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['5141', '5520'], 'element': 'Food supply quantity (tonnes)', 'element_code': '5141'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['5141', '5520'], 'element': 'Food supply quantity (tonnes)', 'element_code': '5141', 'elements': True}")
         
         try:
             # Execute the main migration

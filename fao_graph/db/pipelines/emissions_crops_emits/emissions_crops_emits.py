@@ -18,7 +18,7 @@ class EmissionsCropsEmitsMigrator(GraphMigrationBase):
         
         self.element_codes = ['72255', '72257', '72302', '72303', '72307', '72342', '72343', '72362', '723631', '723632', '72430', '72440']
         
-        self.relationship_properties = {"element": "Rice cultivation (Emissions CH4)", "element_code": "72255", "element_codes": ["72255", "72257", "72302", "72303", "72307", "72342", "72343", "72362", "723631", "723632", "72430", "72440"], "gas_type": "CH4"}
+        self.relationship_properties = {"element": "Rice cultivation (Emissions CH4)", "element_code": "72255", "element_codes": ["72255", "72257", "72302", "72303", "72307", "72342", "72343", "72362", "723631", "723632", "72430", "72440"], "elements": true, "gas_type": "CH4"}
     
     def get_migration_query(self) -> str:
         return load_sql("emissions_crops_emits.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class EmissionsCropsEmitsMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 72255, 72257, 72302, 72303, 72307... (12 total)")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['72255', '72257', '72302', '72303', '72307', '72342', '72343', '72362', '723631', '723632', '72430', '72440'], 'element': 'Rice cultivation (Emissions CH4)', 'element_code': '72255', 'gas_type': 'CH4'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['72255', '72257', '72302', '72303', '72307', '72342', '72343', '72362', '723631', '723632', '72430', '72440'], 'element': 'Rice cultivation (Emissions CH4)', 'element_code': '72255', 'elements': True, 'gas_type': 'CH4'}")
         
         try:
             # Execute the main migration

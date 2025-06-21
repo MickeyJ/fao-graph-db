@@ -18,7 +18,7 @@ class MinimumDietaryDiversityForWomenMddWFoodAndDietMeasuresMigrator(GraphMigrat
         
         self.indicator_codes = ['6211', '6212']
         
-        self.relationship_properties = {"indicator": "Percentage of women achieving MDD-W", "indicator_code": "6211", "indicator_codes": ["6211", "6212"]}
+        self.relationship_properties = {"indicator": "Percentage of women achieving MDD-W", "indicator_code": "6211", "indicator_codes": ["6211", "6212"], "indicators": true}
     
     def get_migration_query(self) -> str:
         return load_sql("minimum_dietary_diversity_for_women_mdd_w_food_and_diet_measures.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class MinimumDietaryDiversityForWomenMddWFoodAndDietMeasuresMigrator(GraphMigrat
         
         logger.info(f"  Filtering on indicator codes: 6211, 6212")
         
-        logger.info(f"  Relationship type properties: {'indicator_codes': ['6211', '6212'], 'indicator': 'Percentage of women achieving MDD-W', 'indicator_code': '6211'}")
+        logger.info(f"  Relationship type properties: {'indicator_codes': ['6211', '6212'], 'indicator': 'Percentage of women achieving MDD-W', 'indicator_code': '6211', 'indicators': True}")
         
         try:
             # Execute the main migration

@@ -7,6 +7,8 @@ CREATE INDEX IF NOT EXISTS idx_climate_change_emissions_indicators_emits_element
 ON fao_graph."EMITS" USING btree ((properties->>'element'));
 CREATE INDEX IF NOT EXISTS idx_climate_change_emissions_indicators_emits_element_code
 ON fao_graph."EMITS" USING btree ((properties->>'element_code'));
+CREATE INDEX IF NOT EXISTS idx_climate_change_emissions_indicators_emits_elements
+ON fao_graph."EMITS" USING btree ((properties->>'elements'));
 CREATE INDEX IF NOT EXISTS idx_climate_change_emissions_indicators_emits_gas_type
 ON fao_graph."EMITS" USING btree ((properties->>'gas_type'));
 

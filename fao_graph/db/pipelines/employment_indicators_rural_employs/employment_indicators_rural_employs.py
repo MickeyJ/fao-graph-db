@@ -18,7 +18,7 @@ class EmploymentIndicatorsRuralEmploysMigrator(GraphMigrationBase):
         
         self.indicator_codes = ['21116', '21139', '21069', '21087', '21092', '21094', '21095', '21096', '21098', '21101', '21103', '21104', '21105', '21108', '21109', '21072', '21117', '21122', '21123', '21124']
         
-        self.relationship_properties = {"indicator": "Employment by status of employment, workers not classified, rural areas", "indicator_code": "21116", "indicator_codes": ["21116", "21139", "21069", "21087", "21092", "21094", "21095", "21096", "21098", "21101", "21103", "21104", "21105", "21108", "21109", "21072", "21117", "21122", "21123", "21124"]}
+        self.relationship_properties = {"indicator": "Employment by status of employment, workers not classified, rural areas", "indicator_code": "21116", "indicator_codes": ["21116", "21139", "21069", "21087", "21092", "21094", "21095", "21096", "21098", "21101", "21103", "21104", "21105", "21108", "21109", "21072", "21117", "21122", "21123", "21124"], "indicators": true}
     
     def get_migration_query(self) -> str:
         return load_sql("employment_indicators_rural_employs.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class EmploymentIndicatorsRuralEmploysMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on indicator codes: 21116, 21139, 21069, 21087, 21092... (20 total)")
         
-        logger.info(f"  Relationship type properties: {'indicator_codes': ['21116', '21139', '21069', '21087', '21092', '21094', '21095', '21096', '21098', '21101', '21103', '21104', '21105', '21108', '21109', '21072', '21117', '21122', '21123', '21124'], 'indicator': 'Employment by status of employment, workers not classified, rural areas', 'indicator_code': '21116'}")
+        logger.info(f"  Relationship type properties: {'indicator_codes': ['21116', '21139', '21069', '21087', '21092', '21094', '21095', '21096', '21098', '21101', '21103', '21104', '21105', '21108', '21109', '21072', '21117', '21122', '21123', '21124'], 'indicator': 'Employment by status of employment, workers not classified, rural areas', 'indicator_code': '21116', 'indicators': True}")
         
         try:
             # Execute the main migration

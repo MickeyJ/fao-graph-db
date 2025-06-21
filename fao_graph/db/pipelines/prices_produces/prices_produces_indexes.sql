@@ -7,6 +7,8 @@ CREATE INDEX IF NOT EXISTS idx_prices_produces_element
 ON fao_graph."PRODUCES" USING btree ((properties->>'element'));
 CREATE INDEX IF NOT EXISTS idx_prices_produces_element_code
 ON fao_graph."PRODUCES" USING btree ((properties->>'element_code'));
+CREATE INDEX IF NOT EXISTS idx_prices_produces_elements
+ON fao_graph."PRODUCES" USING btree ((properties->>'elements'));
 
 -- Index on data properties
 CREATE INDEX IF NOT EXISTS idx_prices_produces_year

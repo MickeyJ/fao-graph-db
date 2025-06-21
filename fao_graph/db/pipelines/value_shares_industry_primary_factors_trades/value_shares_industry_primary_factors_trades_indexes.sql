@@ -7,6 +7,8 @@ CREATE INDEX IF NOT EXISTS idx_value_shares_industry_primary_factors_trades_indu
 ON fao_graph."TRADES" USING btree ((properties->>'industry'));
 CREATE INDEX IF NOT EXISTS idx_value_shares_industry_primary_factors_trades_industry_code
 ON fao_graph."TRADES" USING btree ((properties->>'industry_code'));
+CREATE INDEX IF NOT EXISTS idx_value_shares_industry_primary_factors_trades_industries
+ON fao_graph."TRADES" USING btree ((properties->>'industries'));
 CREATE INDEX IF NOT EXISTS idx_value_shares_industry_primary_factors_trades_flow_direction
 ON fao_graph."TRADES" USING btree ((properties->>'flow_direction'));
 

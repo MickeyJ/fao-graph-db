@@ -7,6 +7,8 @@ CREATE INDEX IF NOT EXISTS idx_investment_foreign_direct_investment_invests_elem
 ON fao_graph."INVESTS" USING btree ((properties->>'element'));
 CREATE INDEX IF NOT EXISTS idx_investment_foreign_direct_investment_invests_element_code
 ON fao_graph."INVESTS" USING btree ((properties->>'element_code'));
+CREATE INDEX IF NOT EXISTS idx_investment_foreign_direct_investment_invests_elements
+ON fao_graph."INVESTS" USING btree ((properties->>'elements'));
 
 -- Index on data properties
 CREATE INDEX IF NOT EXISTS idx_investment_foreign_direct_investment_invests_year

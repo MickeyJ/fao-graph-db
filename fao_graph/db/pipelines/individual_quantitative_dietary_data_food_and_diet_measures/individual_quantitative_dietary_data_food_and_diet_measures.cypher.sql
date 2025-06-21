@@ -4,11 +4,14 @@ SELECT * FROM cypher('fao_graph', $$
     MATCH (target:GeographicLevels {id: row.geographic_level_code_id})
     CREATE (source)-[r:MEASURES {
         -- Dynamic properties from row
-        indicator_code_id: row.indicator_code_id,
-        year: row.year,
-        value: row.value,
-        unit: row.unit,
-        -- Metadata
+        -- indicator_codes: row.indicator_codes,
+        -- indicator: row.indicator,
+        -- indicator_code: row.indicator_code,
+        -- indicators: row.indicators,
+        indicator_code_id: row.indicator_code_id, 
+        unit: row.unit, 
+        value: row.value, 
+        note: row.note,        -- Metadata
         source_dataset: 'individual_quantitative_dietary_data_food_and_diet'
     }]->(target)
     RETURN r
@@ -19,3 +22,5 @@ WHERE row.survey_code_id IS NOT NULL
   AND row.value > 0
   AND row.indicator_code IN (3322)
 ;
+
+

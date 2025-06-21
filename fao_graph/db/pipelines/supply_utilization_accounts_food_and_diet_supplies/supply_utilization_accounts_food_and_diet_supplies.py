@@ -19,7 +19,7 @@ class SupplyUtilizationAccountsFoodAndDietSuppliesMigrator(GraphMigrationBase):
         self.element_codes = ['6123', '6128', '6206', '6209']
         self.indicator_codes = ['4004', '4005', '4007', '4009', '4010', '4017', '4018', '4024', '4029', '4033', '4034', '4035', '4036', '4003', '4006', '4011', '4012', '4013', '4015', '4016', '4021', '4022', '4032', '4037', '4038']
         
-        self.relationship_properties = {"indicator": "Protein supply", "indicator_code": "4004", "indicator_codes": ["4004", "4005", "4007", "4009", "4010", "4017", "4018", "4024", "4029", "4033", "4034", "4035", "4036", "4003", "4006", "4011", "4012", "4013", "4015", "4016", "4021", "4022", "4032", "4037", "4038"], "nutrient_type": "protein"}
+        self.relationship_properties = {"indicator": "Protein supply", "indicator_code": "4004", "indicator_codes": ["4004", "4005", "4007", "4009", "4010", "4017", "4018", "4024", "4029", "4033", "4034", "4035", "4036", "4003", "4006", "4011", "4012", "4013", "4015", "4016", "4021", "4022", "4032", "4037", "4038"], "indicators": true, "nutrient_type": "protein"}
     
     def get_migration_query(self) -> str:
         return load_sql("supply_utilization_accounts_food_and_diet_supplies.cypher.sql", Path(__file__).parent)
@@ -37,7 +37,7 @@ class SupplyUtilizationAccountsFoodAndDietSuppliesMigrator(GraphMigrationBase):
         logger.info(f"  Filtering on element codes: 6123, 6128, 6206, 6209")
         logger.info(f"  Filtering on indicator codes: 4004, 4005, 4007, 4009, 4010... (25 total)")
         
-        logger.info(f"  Relationship type properties: {'indicator_codes': ['4004', '4005', '4007', '4009', '4010', '4017', '4018', '4024', '4029', '4033', '4034', '4035', '4036', '4003', '4006', '4011', '4012', '4013', '4015', '4016', '4021', '4022', '4032', '4037', '4038'], 'indicator': 'Protein supply', 'indicator_code': '4004', 'nutrient_type': 'protein'}")
+        logger.info(f"  Relationship type properties: {'indicator_codes': ['4004', '4005', '4007', '4009', '4010', '4017', '4018', '4024', '4029', '4033', '4034', '4035', '4036', '4003', '4006', '4011', '4012', '4013', '4015', '4016', '4021', '4022', '4032', '4037', '4038'], 'indicator': 'Protein supply', 'indicator_code': '4004', 'indicators': True, 'nutrient_type': 'protein'}")
         
         try:
             # Execute the main migration

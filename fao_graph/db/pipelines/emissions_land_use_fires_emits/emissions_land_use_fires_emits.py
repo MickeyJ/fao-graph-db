@@ -18,7 +18,7 @@ class EmissionsLandUseFiresEmitsMigrator(GraphMigrationBase):
         
         self.element_codes = ['7225', '7230', '7273', '7245', '7246']
         
-        self.relationship_properties = {"element": "Emissions (CH4)", "element_code": "7225", "element_codes": ["7225", "7230", "7273", "7245", "7246"], "gas_type": "CH4"}
+        self.relationship_properties = {"element": "Emissions (CH4)", "element_code": "7225", "element_codes": ["7225", "7230", "7273", "7245", "7246"], "elements": true, "gas_type": "CH4"}
     
     def get_migration_query(self) -> str:
         return load_sql("emissions_land_use_fires_emits.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class EmissionsLandUseFiresEmitsMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 7225, 7230, 7273, 7245, 7246")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['7225', '7230', '7273', '7245', '7246'], 'element': 'Emissions (CH4)', 'element_code': '7225', 'gas_type': 'CH4'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['7225', '7230', '7273', '7245', '7246'], 'element': 'Emissions (CH4)', 'element_code': '7225', 'elements': True, 'gas_type': 'CH4'}")
         
         try:
             # Execute the main migration

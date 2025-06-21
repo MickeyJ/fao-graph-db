@@ -18,7 +18,7 @@ class MinimumDietaryDiversityForWomenMddWFoodAndDietSuppliesMigrator(GraphMigrat
         
         self.element_codes = ['6121']
         
-        self.relationship_properties = {"element": "Value", "element_code": "6121", "element_codes": ["6121"]}
+        self.relationship_properties = {"element": "Value", "element_code": "6121", "element_codes": ["6121"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("minimum_dietary_diversity_for_women_mdd_w_food_and_diet_supplies.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class MinimumDietaryDiversityForWomenMddWFoodAndDietSuppliesMigrator(GraphMigrat
         
         logger.info(f"  Filtering on element codes: 6121")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['6121'], 'element': 'Value', 'element_code': '6121'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['6121'], 'element': 'Value', 'element_code': '6121', 'elements': True}")
         
         try:
             # Execute the main migration

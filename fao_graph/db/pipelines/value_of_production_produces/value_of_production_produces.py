@@ -18,7 +18,7 @@ class ValueOfProductionProducesMigrator(GraphMigrationBase):
         
         self.element_codes = ['152', '55', '56', '57', '58']
         
-        self.relationship_properties = {"element": "Gross Production Value (constant 2014-2016 thousand I$)", "element_code": "152", "element_codes": ["152", "55", "56", "57", "58"]}
+        self.relationship_properties = {"element": "Gross Production Value (constant 2014-2016 thousand I$)", "element_code": "152", "element_codes": ["152", "55", "56", "57", "58"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("value_of_production_produces.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class ValueOfProductionProducesMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 152, 55, 56, 57, 58")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['152', '55', '56', '57', '58'], 'element': 'Gross Production Value (constant 2014-2016 thousand I$)', 'element_code': '152'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['152', '55', '56', '57', '58'], 'element': 'Gross Production Value (constant 2014-2016 thousand I$)', 'element_code': '152', 'elements': True}")
         
         try:
             # Execute the main migration

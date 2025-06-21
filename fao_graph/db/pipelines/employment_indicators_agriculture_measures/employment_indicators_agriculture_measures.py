@@ -18,7 +18,7 @@ class EmploymentIndicatorsAgricultureMeasuresMigrator(GraphMigrationBase):
         
         self.indicator_codes = ['21150', '21151', '21152', '21155', '21156', '21157', '21158', '21161', '21162', '21164', '21167', '21114', '21118', '21126', '21160', '21163', '21085']
         
-        self.relationship_properties = {"indicator": "Mean weekly hours actually worked per employed person in agriculture", "indicator_code": "21150", "indicator_codes": ["21150", "21151", "21152", "21155", "21156", "21157", "21158", "21161", "21162", "21164", "21167", "21114", "21118", "21126", "21160", "21163", "21085"]}
+        self.relationship_properties = {"indicator": "Mean weekly hours actually worked per employed person in agriculture", "indicator_code": "21150", "indicator_codes": ["21150", "21151", "21152", "21155", "21156", "21157", "21158", "21161", "21162", "21164", "21167", "21114", "21118", "21126", "21160", "21163", "21085"], "indicators": true}
     
     def get_migration_query(self) -> str:
         return load_sql("employment_indicators_agriculture_measures.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class EmploymentIndicatorsAgricultureMeasuresMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on indicator codes: 21150, 21151, 21152, 21155, 21156... (17 total)")
         
-        logger.info(f"  Relationship type properties: {'indicator_codes': ['21150', '21151', '21152', '21155', '21156', '21157', '21158', '21161', '21162', '21164', '21167', '21114', '21118', '21126', '21160', '21163', '21085'], 'indicator': 'Mean weekly hours actually worked per employed person in agriculture', 'indicator_code': '21150'}")
+        logger.info(f"  Relationship type properties: {'indicator_codes': ['21150', '21151', '21152', '21155', '21156', '21157', '21158', '21161', '21162', '21164', '21167', '21114', '21118', '21126', '21160', '21163', '21085'], 'indicator': 'Mean weekly hours actually worked per employed person in agriculture', 'indicator_code': '21150', 'indicators': True}")
         
         try:
             # Execute the main migration

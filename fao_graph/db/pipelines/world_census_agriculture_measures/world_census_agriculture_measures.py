@@ -18,7 +18,7 @@ class WorldCensusAgricultureMeasuresMigrator(GraphMigrationBase):
         
         self.element_codes = ['5018', '50190', '50191', '6200', '5017', '6201', '62020']
         
-        self.relationship_properties = {"element": "Average number of parcels per holding", "element_code": "5018", "element_codes": ["5018", "50190", "50191", "6200", "5017", "6201", "62020"]}
+        self.relationship_properties = {"element": "Average number of parcels per holding", "element_code": "5018", "element_codes": ["5018", "50190", "50191", "6200", "5017", "6201", "62020"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("world_census_agriculture_measures.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class WorldCensusAgricultureMeasuresMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 5018, 50190, 50191, 6200, 5017... (7 total)")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['5018', '50190', '50191', '6200', '5017', '6201', '62020'], 'element': 'Average number of parcels per holding', 'element_code': '5018'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['5018', '50190', '50191', '6200', '5017', '6201', '62020'], 'element': 'Average number of parcels per holding', 'element_code': '5018', 'elements': True}")
         
         try:
             # Execute the main migration

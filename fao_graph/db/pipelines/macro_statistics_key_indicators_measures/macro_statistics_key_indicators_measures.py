@@ -18,7 +18,7 @@ class MacroStatisticsKeyIndicatorsMeasuresMigrator(GraphMigrationBase):
         
         self.element_codes = ['6143', '61900', '6103', '61570', '6163', '61860', '6187', '61890', '6119', '61290', '61820', '6185', '6110', '6129', '61550', '61810', '6182', '6184', '6224', '6225']
         
-        self.relationship_properties = {"element": "Share of Value Added (Total Manufacturing) US$", "element_code": "6143", "element_codes": ["6143", "61900", "6103", "61570", "6163", "61860", "6187", "61890", "6119", "61290", "61820", "6185", "6110", "6129", "61550", "61810", "6182", "6184", "6224", "6225"]}
+        self.relationship_properties = {"element": "Share of Value Added (Total Manufacturing) US$", "element_code": "6143", "element_codes": ["6143", "61900", "6103", "61570", "6163", "61860", "6187", "61890", "6119", "61290", "61820", "6185", "6110", "6129", "61550", "61810", "6182", "6184", "6224", "6225"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("macro_statistics_key_indicators_measures.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class MacroStatisticsKeyIndicatorsMeasuresMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 6143, 61900, 6103, 61570, 6163... (20 total)")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['6143', '61900', '6103', '61570', '6163', '61860', '6187', '61890', '6119', '61290', '61820', '6185', '6110', '6129', '61550', '61810', '6182', '6184', '6224', '6225'], 'element': 'Share of Value Added (Total Manufacturing) US$', 'element_code': '6143'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['6143', '61900', '6103', '61570', '6163', '61860', '6187', '61890', '6119', '61290', '61820', '6185', '6110', '6129', '61550', '61810', '6182', '6184', '6224', '6225'], 'element': 'Share of Value Added (Total Manufacturing) US$', 'element_code': '6143', 'elements': True}")
         
         try:
             # Execute the main migration

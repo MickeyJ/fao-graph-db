@@ -18,7 +18,7 @@ class EmissionsPrePostProductionEmitsMigrator(GraphMigrationBase):
         
         self.element_codes = ['717815', '7225', '7230', '723113', '7273']
         
-        self.relationship_properties = {"element": "Emissions (CO2eq) from F-gases (AR5)", "element_code": "717815", "element_codes": ["717815", "7225", "7230", "723113", "7273"], "gas_type": "CH4"}
+        self.relationship_properties = {"element": "Emissions (CO2eq) from F-gases (AR5)", "element_code": "717815", "element_codes": ["717815", "7225", "7230", "723113", "7273"], "elements": true, "gas_type": "CH4"}
     
     def get_migration_query(self) -> str:
         return load_sql("emissions_pre_post_production_emits.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class EmissionsPrePostProductionEmitsMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 717815, 7225, 7230, 723113, 7273")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['717815', '7225', '7230', '723113', '7273'], 'element': 'Emissions (CO2eq) from F-gases (AR5)', 'element_code': '717815', 'gas_type': 'CH4'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['717815', '7225', '7230', '723113', '7273'], 'element': 'Emissions (CO2eq) from F-gases (AR5)', 'element_code': '717815', 'elements': True, 'gas_type': 'CH4'}")
         
         try:
             # Execute the main migration

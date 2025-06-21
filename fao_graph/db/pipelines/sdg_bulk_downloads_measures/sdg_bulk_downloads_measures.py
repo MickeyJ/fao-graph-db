@@ -18,7 +18,7 @@ class SdgBulkDownloadsMeasuresMigrator(GraphMigrationBase):
         
         self.element_codes = ['61212', '61992', '61211', '61991']
         
-        self.relationship_properties = {"element": "Confidence interval: Upper bound", "element_code": "61212", "element_codes": ["61212", "61992", "61211", "61991"]}
+        self.relationship_properties = {"element": "Confidence interval: Upper bound", "element_code": "61212", "element_codes": ["61212", "61992", "61211", "61991"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("sdg_bulk_downloads_measures.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class SdgBulkDownloadsMeasuresMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 61212, 61992, 61211, 61991")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['61212', '61992', '61211', '61991'], 'element': 'Confidence interval: Upper bound', 'element_code': '61212'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['61212', '61992', '61211', '61991'], 'element': 'Confidence interval: Upper bound', 'element_code': '61212', 'elements': True}")
         
         try:
             # Execute the main migration

@@ -18,7 +18,7 @@ class PricesArchiveProducesMigrator(GraphMigrationBase):
         
         self.element_codes = ['5530']
         
-        self.relationship_properties = {"element": "Producer Price (LCU/tonne)", "element_code": "5530", "element_codes": ["5530"]}
+        self.relationship_properties = {"element": "Producer Price (LCU/tonne)", "element_code": "5530", "element_codes": ["5530"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("prices_archive_produces.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class PricesArchiveProducesMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 5530")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['5530'], 'element': 'Producer Price (LCU/tonne)', 'element_code': '5530'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['5530'], 'element': 'Producer Price (LCU/tonne)', 'element_code': '5530', 'elements': True}")
         
         try:
             # Execute the main migration

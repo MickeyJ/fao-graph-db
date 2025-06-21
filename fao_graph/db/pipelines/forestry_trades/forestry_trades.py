@@ -18,7 +18,7 @@ class ForestryTradesMigrator(GraphMigrationBase):
         
         self.element_codes = ['5610', '5616', '5622', '5910', '5916', '5922']
         
-        self.relationship_properties = {"element": "Import quantity", "element_code": "5610", "element_codes": ["5610", "5616", "5622", "5910", "5916", "5922"], "flow_direction": "bidirectional"}
+        self.relationship_properties = {"element": "Import quantity", "element_code": "5610", "element_codes": ["5610", "5616", "5622", "5910", "5916", "5922"], "elements": true, "flow_direction": "bidirectional"}
     
     def get_migration_query(self) -> str:
         return load_sql("forestry_trades.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class ForestryTradesMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 5610, 5616, 5622, 5910, 5916... (6 total)")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['5610', '5616', '5622', '5910', '5916', '5922'], 'element': 'Import quantity', 'element_code': '5610', 'flow_direction': 'bidirectional'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['5610', '5616', '5622', '5910', '5916', '5922'], 'element': 'Import quantity', 'element_code': '5610', 'elements': True, 'flow_direction': 'bidirectional'}")
         
         try:
             # Execute the main migration

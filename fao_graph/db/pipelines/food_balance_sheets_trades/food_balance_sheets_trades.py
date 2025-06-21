@@ -18,7 +18,7 @@ class FoodBalanceSheetsTradesMigrator(GraphMigrationBase):
         
         self.element_codes = ['5611', '5911']
         
-        self.relationship_properties = {"element": "Import quantity", "element_code": "5611", "element_codes": ["5611", "5911"], "flow_direction": "bidirectional"}
+        self.relationship_properties = {"element": "Import quantity", "element_code": "5611", "element_codes": ["5611", "5911"], "elements": true, "flow_direction": "bidirectional"}
     
     def get_migration_query(self) -> str:
         return load_sql("food_balance_sheets_trades.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class FoodBalanceSheetsTradesMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 5611, 5911")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['5611', '5911'], 'element': 'Import quantity', 'element_code': '5611', 'flow_direction': 'bidirectional'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['5611', '5911'], 'element': 'Import quantity', 'element_code': '5611', 'elements': True, 'flow_direction': 'bidirectional'}")
         
         try:
             # Execute the main migration

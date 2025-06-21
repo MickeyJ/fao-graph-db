@@ -18,7 +18,7 @@ class InvestmentForeignDirectInvestmentInvestsMigrator(GraphMigrationBase):
         
         self.element_codes = ['6110', '6184']
         
-        self.relationship_properties = {"element": "Value US$", "element_code": "6110", "element_codes": ["6110", "6184"]}
+        self.relationship_properties = {"element": "Value US$", "element_code": "6110", "element_codes": ["6110", "6184"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("investment_foreign_direct_investment_invests.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class InvestmentForeignDirectInvestmentInvestsMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 6110, 6184")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['6110', '6184'], 'element': 'Value US$', 'element_code': '6110'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['6110', '6184'], 'element': 'Value US$', 'element_code': '6110', 'elements': True}")
         
         try:
             # Execute the main migration

@@ -18,7 +18,7 @@ class ProductionCropsLivestockProducesMigrator(GraphMigrationBase):
         
         self.element_codes = ['5412', '5413', '5417', '5424', '5312', '5318', '5313', '5510', '5513', '5111', '5112', '5114', '5320', '5321']
         
-        self.relationship_properties = {"element": "Yield", "element_code": "5412", "element_codes": ["5412", "5413", "5417", "5424", "5312", "5318", "5313", "5510", "5513", "5111", "5112", "5114", "5320", "5321"]}
+        self.relationship_properties = {"element": "Yield", "element_code": "5412", "element_codes": ["5412", "5413", "5417", "5424", "5312", "5318", "5313", "5510", "5513", "5111", "5112", "5114", "5320", "5321"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("production_crops_livestock_produces.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class ProductionCropsLivestockProducesMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 5412, 5413, 5417, 5424, 5312... (14 total)")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['5412', '5413', '5417', '5424', '5312', '5318', '5313', '5510', '5513', '5111', '5112', '5114', '5320', '5321'], 'element': 'Yield', 'element_code': '5412'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['5412', '5413', '5417', '5424', '5312', '5318', '5313', '5510', '5513', '5111', '5112', '5114', '5320', '5321'], 'element': 'Yield', 'element_code': '5412', 'elements': True}")
         
         try:
             # Execute the main migration

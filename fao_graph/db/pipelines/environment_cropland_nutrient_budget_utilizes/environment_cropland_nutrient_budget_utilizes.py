@@ -18,7 +18,7 @@ class EnvironmentCroplandNutrientBudgetUtilizesMigrator(GraphMigrationBase):
         
         self.element_codes = ['7290', '7291', '7292']
         
-        self.relationship_properties = {"element": "Cropland nitrogen use efficiency", "element_code": "7290", "element_codes": ["7290", "7291", "7292"]}
+        self.relationship_properties = {"element": "Cropland nitrogen use efficiency", "element_code": "7290", "element_codes": ["7290", "7291", "7292"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("environment_cropland_nutrient_budget_utilizes.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class EnvironmentCroplandNutrientBudgetUtilizesMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 7290, 7291, 7292")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['7290', '7291', '7292'], 'element': 'Cropland nitrogen use efficiency', 'element_code': '7290'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['7290', '7291', '7292'], 'element': 'Cropland nitrogen use efficiency', 'element_code': '7290', 'elements': True}")
         
         try:
             # Execute the main migration

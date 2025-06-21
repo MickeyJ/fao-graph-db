@@ -7,6 +7,8 @@ CREATE INDEX IF NOT EXISTS idx_supply_utilization_accounts_food_and_diet_supplie
 ON fao_graph."SUPPLIES" USING btree ((properties->>'indicator'));
 CREATE INDEX IF NOT EXISTS idx_supply_utilization_accounts_food_and_diet_supplies_indicator_code
 ON fao_graph."SUPPLIES" USING btree ((properties->>'indicator_code'));
+CREATE INDEX IF NOT EXISTS idx_supply_utilization_accounts_food_and_diet_supplies_indicators
+ON fao_graph."SUPPLIES" USING btree ((properties->>'indicators'));
 CREATE INDEX IF NOT EXISTS idx_supply_utilization_accounts_food_and_diet_supplies_nutrient_type
 ON fao_graph."SUPPLIES" USING btree ((properties->>'nutrient_type'));
 

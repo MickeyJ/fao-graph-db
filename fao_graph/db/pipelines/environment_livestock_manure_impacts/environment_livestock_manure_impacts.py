@@ -18,7 +18,7 @@ class EnvironmentLivestockManureImpactsMigrator(GraphMigrationBase):
         
         self.element_codes = ['72539']
         
-        self.relationship_properties = {"element": "Losses from manure treated (N content)", "element_code": "72539", "element_codes": ["72539"]}
+        self.relationship_properties = {"element": "Losses from manure treated (N content)", "element_code": "72539", "element_codes": ["72539"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("environment_livestock_manure_impacts.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class EnvironmentLivestockManureImpactsMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 72539")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['72539'], 'element': 'Losses from manure treated (N content)', 'element_code': '72539'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['72539'], 'element': 'Losses from manure treated (N content)', 'element_code': '72539', 'elements': True}")
         
         try:
             # Execute the main migration

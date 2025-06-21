@@ -7,6 +7,8 @@ CREATE INDEX IF NOT EXISTS idx_commodity_balances_non_food_2010_trades_element
 ON fao_graph."TRADES" USING btree ((properties->>'element'));
 CREATE INDEX IF NOT EXISTS idx_commodity_balances_non_food_2010_trades_element_code
 ON fao_graph."TRADES" USING btree ((properties->>'element_code'));
+CREATE INDEX IF NOT EXISTS idx_commodity_balances_non_food_2010_trades_elements
+ON fao_graph."TRADES" USING btree ((properties->>'elements'));
 CREATE INDEX IF NOT EXISTS idx_commodity_balances_non_food_2010_trades_flow_direction
 ON fao_graph."TRADES" USING btree ((properties->>'flow_direction'));
 

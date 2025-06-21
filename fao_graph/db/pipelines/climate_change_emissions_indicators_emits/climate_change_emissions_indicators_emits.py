@@ -18,7 +18,7 @@ class ClimateChangeEmissionsIndicatorsEmitsMigrator(GraphMigrationBase):
         
         self.element_codes = ['7179', '726313', '7264', '7265', '7266', '7279', '72791', '72792']
         
-        self.relationship_properties = {"element": "Emissions Share (CO2eq) (AR5) (F-gases)", "element_code": "7179", "element_codes": ["7179", "726313", "7264", "7265", "7266", "7279", "72791", "72792"], "gas_type": "CH4"}
+        self.relationship_properties = {"element": "Emissions Share (CO2eq) (AR5) (F-gases)", "element_code": "7179", "element_codes": ["7179", "726313", "7264", "7265", "7266", "7279", "72791", "72792"], "elements": true, "gas_type": "CH4"}
     
     def get_migration_query(self) -> str:
         return load_sql("climate_change_emissions_indicators_emits.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class ClimateChangeEmissionsIndicatorsEmitsMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 7179, 726313, 7264, 7265, 7266... (8 total)")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['7179', '726313', '7264', '7265', '7266', '7279', '72791', '72792'], 'element': 'Emissions Share (CO2eq) (AR5) (F-gases)', 'element_code': '7179', 'gas_type': 'CH4'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['7179', '726313', '7264', '7265', '7266', '7279', '72791', '72792'], 'element': 'Emissions Share (CO2eq) (AR5) (F-gases)', 'element_code': '7179', 'elements': True, 'gas_type': 'CH4'}")
         
         try:
             # Execute the main migration

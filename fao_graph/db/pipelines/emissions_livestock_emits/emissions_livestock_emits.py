@@ -18,7 +18,7 @@ class EmissionsLivestockEmitsMigrator(GraphMigrationBase):
         
         self.element_codes = ['72254', '72256', '72300', '72301', '72306', '72340', '72341', '72346', '72360', '723601', '723602', '72361', '723611', '723612', '72366', '72431', '72441']
         
-        self.relationship_properties = {"element": "Enteric fermentation (Emissions CH4)", "element_code": "72254", "element_codes": ["72254", "72256", "72300", "72301", "72306", "72340", "72341", "72346", "72360", "723601", "723602", "72361", "723611", "723612", "72366", "72431", "72441"], "gas_type": "CH4"}
+        self.relationship_properties = {"element": "Enteric fermentation (Emissions CH4)", "element_code": "72254", "element_codes": ["72254", "72256", "72300", "72301", "72306", "72340", "72341", "72346", "72360", "723601", "723602", "72361", "723611", "723612", "72366", "72431", "72441"], "elements": true, "gas_type": "CH4"}
     
     def get_migration_query(self) -> str:
         return load_sql("emissions_livestock_emits.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class EmissionsLivestockEmitsMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 72254, 72256, 72300, 72301, 72306... (17 total)")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['72254', '72256', '72300', '72301', '72306', '72340', '72341', '72346', '72360', '723601', '723602', '72361', '723611', '723612', '72366', '72431', '72441'], 'element': 'Enteric fermentation (Emissions CH4)', 'element_code': '72254', 'gas_type': 'CH4'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['72254', '72256', '72300', '72301', '72306', '72340', '72341', '72346', '72360', '723601', '723602', '72361', '723611', '723612', '72366', '72431', '72441'], 'element': 'Enteric fermentation (Emissions CH4)', 'element_code': '72254', 'elements': True, 'gas_type': 'CH4'}")
         
         try:
             # Execute the main migration

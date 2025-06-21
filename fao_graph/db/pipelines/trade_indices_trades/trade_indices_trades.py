@@ -18,7 +18,7 @@ class TradeIndicesTradesMigrator(GraphMigrationBase):
         
         self.element_codes = ['462', '464', '465', '492', '494', '495', '64', '65', '94', '95']
         
-        self.relationship_properties = {"element": "Import Value Index (2014-2016 = 100)", "element_code": "462", "element_codes": ["462", "464", "465", "492", "494", "495", "64", "65", "94", "95"], "flow_direction": "bidirectional"}
+        self.relationship_properties = {"element": "Import Value Index (2014-2016 = 100)", "element_code": "462", "element_codes": ["462", "464", "465", "492", "494", "495", "64", "65", "94", "95"], "elements": true, "flow_direction": "bidirectional"}
     
     def get_migration_query(self) -> str:
         return load_sql("trade_indices_trades.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class TradeIndicesTradesMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 462, 464, 465, 492, 494... (10 total)")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['462', '464', '465', '492', '494', '495', '64', '65', '94', '95'], 'element': 'Import Value Index (2014-2016 = 100)', 'element_code': '462', 'flow_direction': 'bidirectional'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['462', '464', '465', '492', '494', '495', '64', '65', '94', '95'], 'element': 'Import Value Index (2014-2016 = 100)', 'element_code': '462', 'elements': True, 'flow_direction': 'bidirectional'}")
         
         try:
             # Execute the main migration

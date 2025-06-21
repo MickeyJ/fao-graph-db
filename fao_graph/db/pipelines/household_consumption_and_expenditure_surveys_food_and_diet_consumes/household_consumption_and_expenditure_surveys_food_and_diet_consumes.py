@@ -18,7 +18,7 @@ class HouseholdConsumptionAndExpenditureSurveysFoodAndDietConsumesMigrator(Graph
         
         self.indicator_codes = ['3302', '3303', '3304', '3305', '3306', '3307', '3308', '3309', '3310', '3311', '3312', '3313', '3314', '3315', '3316', '3317', '3318', '3319', '3300']
         
-        self.relationship_properties = {"indicator": "Energy apparent intake", "indicator_code": "3302", "indicator_codes": ["3302", "3303", "3304", "3305", "3306", "3307", "3308", "3309", "3310", "3311", "3312", "3313", "3314", "3315", "3316", "3317", "3318", "3319", "3300"]}
+        self.relationship_properties = {"indicator": "Energy apparent intake", "indicator_code": "3302", "indicator_codes": ["3302", "3303", "3304", "3305", "3306", "3307", "3308", "3309", "3310", "3311", "3312", "3313", "3314", "3315", "3316", "3317", "3318", "3319", "3300"], "indicators": true}
     
     def get_migration_query(self) -> str:
         return load_sql("household_consumption_and_expenditure_surveys_food_and_diet_consumes.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class HouseholdConsumptionAndExpenditureSurveysFoodAndDietConsumesMigrator(Graph
         
         logger.info(f"  Filtering on indicator codes: 3302, 3303, 3304, 3305, 3306... (19 total)")
         
-        logger.info(f"  Relationship type properties: {'indicator_codes': ['3302', '3303', '3304', '3305', '3306', '3307', '3308', '3309', '3310', '3311', '3312', '3313', '3314', '3315', '3316', '3317', '3318', '3319', '3300'], 'indicator': 'Energy apparent intake', 'indicator_code': '3302'}")
+        logger.info(f"  Relationship type properties: {'indicator_codes': ['3302', '3303', '3304', '3305', '3306', '3307', '3308', '3309', '3310', '3311', '3312', '3313', '3314', '3315', '3316', '3317', '3318', '3319', '3300'], 'indicator': 'Energy apparent intake', 'indicator_code': '3302', 'indicators': True}")
         
         try:
             # Execute the main migration

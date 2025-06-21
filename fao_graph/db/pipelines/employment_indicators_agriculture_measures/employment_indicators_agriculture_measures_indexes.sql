@@ -7,6 +7,8 @@ CREATE INDEX IF NOT EXISTS idx_employment_indicators_agriculture_measures_indica
 ON fao_graph."MEASURES" USING btree ((properties->>'indicator'));
 CREATE INDEX IF NOT EXISTS idx_employment_indicators_agriculture_measures_indicator_code
 ON fao_graph."MEASURES" USING btree ((properties->>'indicator_code'));
+CREATE INDEX IF NOT EXISTS idx_employment_indicators_agriculture_measures_indicators
+ON fao_graph."MEASURES" USING btree ((properties->>'indicators'));
 
 -- Index on data properties
 CREATE INDEX IF NOT EXISTS idx_employment_indicators_agriculture_measures_year

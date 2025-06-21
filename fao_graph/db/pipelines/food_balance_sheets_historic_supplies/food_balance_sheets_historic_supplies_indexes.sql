@@ -7,6 +7,8 @@ CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_historic_supplies_element
 ON fao_graph."SUPPLIES" USING btree ((properties->>'element'));
 CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_historic_supplies_element_code
 ON fao_graph."SUPPLIES" USING btree ((properties->>'element_code'));
+CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_historic_supplies_elements
+ON fao_graph."SUPPLIES" USING btree ((properties->>'elements'));
 CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_historic_supplies_nutrient_type
 ON fao_graph."SUPPLIES" USING btree ((properties->>'nutrient_type'));
 

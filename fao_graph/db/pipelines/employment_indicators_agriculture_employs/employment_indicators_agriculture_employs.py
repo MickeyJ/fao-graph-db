@@ -18,7 +18,7 @@ class EmploymentIndicatorsAgricultureEmploysMigrator(GraphMigrationBase):
         
         self.indicator_codes = ['21110', '21066', '21086', '21088', '21089', '21090', '21091', '21093', '21097', '21100', '21107', '21111', '21144']
         
-        self.relationship_properties = {"indicator": "Employment in agriculture by status of employment, workers not classified", "indicator_code": "21110", "indicator_codes": ["21110", "21066", "21086", "21088", "21089", "21090", "21091", "21093", "21097", "21100", "21107", "21111", "21144"]}
+        self.relationship_properties = {"indicator": "Employment in agriculture by status of employment, workers not classified", "indicator_code": "21110", "indicator_codes": ["21110", "21066", "21086", "21088", "21089", "21090", "21091", "21093", "21097", "21100", "21107", "21111", "21144"], "indicators": true}
     
     def get_migration_query(self) -> str:
         return load_sql("employment_indicators_agriculture_employs.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class EmploymentIndicatorsAgricultureEmploysMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on indicator codes: 21110, 21066, 21086, 21088, 21089... (13 total)")
         
-        logger.info(f"  Relationship type properties: {'indicator_codes': ['21110', '21066', '21086', '21088', '21089', '21090', '21091', '21093', '21097', '21100', '21107', '21111', '21144'], 'indicator': 'Employment in agriculture by status of employment, workers not classified', 'indicator_code': '21110'}")
+        logger.info(f"  Relationship type properties: {'indicator_codes': ['21110', '21066', '21086', '21088', '21089', '21090', '21091', '21093', '21097', '21100', '21107', '21111', '21144'], 'indicator': 'Employment in agriculture by status of employment, workers not classified', 'indicator_code': '21110', 'indicators': True}")
         
         try:
             # Execute the main migration

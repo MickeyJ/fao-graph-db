@@ -18,7 +18,7 @@ class AstiExpendituresMeasuresMigrator(GraphMigrationBase):
         
         self.element_codes = ['6083']
         
-        self.relationship_properties = {"element": "Share of Value Added (Agriculture, Forestry and Fishing)", "element_code": "6083", "element_codes": ["6083"]}
+        self.relationship_properties = {"element": "Share of Value Added (Agriculture, Forestry and Fishing)", "element_code": "6083", "element_codes": ["6083"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("asti_expenditures_measures.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class AstiExpendituresMeasuresMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 6083")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['6083'], 'element': 'Share of Value Added (Agriculture, Forestry and Fishing)', 'element_code': '6083'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['6083'], 'element': 'Share of Value Added (Agriculture, Forestry and Fishing)', 'element_code': '6083', 'elements': True}")
         
         try:
             # Execute the main migration

@@ -7,6 +7,8 @@ CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_measures_element
 ON fao_graph."MEASURES" USING btree ((properties->>'element'));
 CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_measures_element_code
 ON fao_graph."MEASURES" USING btree ((properties->>'element_code'));
+CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_measures_elements
+ON fao_graph."MEASURES" USING btree ((properties->>'elements'));
 
 -- Index on data properties
 CREATE INDEX IF NOT EXISTS idx_food_balance_sheets_measures_year

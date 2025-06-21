@@ -18,7 +18,7 @@ class InvestmentMachineryArchiveTradesMigrator(GraphMigrationBase):
         
         self.element_codes = ['5607', '5622', '5907', '5922']
         
-        self.relationship_properties = {"element": "Import Quantity", "element_code": "5607", "element_codes": ["5607", "5622", "5907", "5922"], "flow_direction": "bidirectional"}
+        self.relationship_properties = {"element": "Import Quantity", "element_code": "5607", "element_codes": ["5607", "5622", "5907", "5922"], "elements": true, "flow_direction": "bidirectional"}
     
     def get_migration_query(self) -> str:
         return load_sql("investment_machinery_archive_trades.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class InvestmentMachineryArchiveTradesMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 5607, 5622, 5907, 5922")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['5607', '5622', '5907', '5922'], 'element': 'Import Quantity', 'element_code': '5607', 'flow_direction': 'bidirectional'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['5607', '5622', '5907', '5922'], 'element': 'Import Quantity', 'element_code': '5607', 'elements': True, 'flow_direction': 'bidirectional'}")
         
         try:
             # Execute the main migration

@@ -18,7 +18,7 @@ class InvestmentCountryInvestmentStatisticsProfileMeasuresMigrator(GraphMigratio
         
         self.element_codes = ['6139', '61390', '6192', '6159', '6193']
         
-        self.relationship_properties = {"element": "Share of Total US$", "element_code": "6139", "element_codes": ["6139", "61390", "6192", "6159", "6193"]}
+        self.relationship_properties = {"element": "Share of Total US$", "element_code": "6139", "element_codes": ["6139", "61390", "6192", "6159", "6193"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("investment_country_investment_statistics_profile_measures.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class InvestmentCountryInvestmentStatisticsProfileMeasuresMigrator(GraphMigratio
         
         logger.info(f"  Filtering on element codes: 6139, 61390, 6192, 6159, 6193")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['6139', '61390', '6192', '6159', '6193'], 'element': 'Share of Total US$', 'element_code': '6139'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['6139', '61390', '6192', '6159', '6193'], 'element': 'Share of Total US$', 'element_code': '6139', 'elements': True}")
         
         try:
             # Execute the main migration

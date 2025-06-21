@@ -15,9 +15,10 @@ SELECT * FROM cypher('fao_graph', $$
            r.element_codes as element_codes,
            r.element as element,
            r.element_code as element_code,
+           r.elements as elements,
            r.year as year,
            r.value as value,
            r.unit as unit
     LIMIT 10
 $$) as (source agtype, relationship agtype, target agtype
-, element_codes agtype, element agtype, element_code agtype, year agtype, value agtype, unit agtype);
+, element_codes agtype, element agtype, element_code agtype, elements agtype, year agtype, value agtype, unit agtype);

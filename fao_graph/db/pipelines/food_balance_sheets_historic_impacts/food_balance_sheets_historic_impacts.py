@@ -18,7 +18,7 @@ class FoodBalanceSheetsHistoricImpactsMigrator(GraphMigrationBase):
         
         self.element_codes = ['5123']
         
-        self.relationship_properties = {"element": "Losses", "element_code": "5123", "element_codes": ["5123"]}
+        self.relationship_properties = {"element": "Losses", "element_code": "5123", "element_codes": ["5123"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("food_balance_sheets_historic_impacts.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class FoodBalanceSheetsHistoricImpactsMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 5123")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['5123'], 'element': 'Losses', 'element_code': '5123'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['5123'], 'element': 'Losses', 'element_code': '5123', 'elements': True}")
         
         try:
             # Execute the main migration

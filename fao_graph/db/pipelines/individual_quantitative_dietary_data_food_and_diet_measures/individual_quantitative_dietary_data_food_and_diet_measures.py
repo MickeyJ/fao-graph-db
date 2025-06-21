@@ -18,7 +18,7 @@ class IndividualQuantitativeDietaryDataFoodAndDietMeasuresMigrator(GraphMigratio
         
         self.indicator_codes = ['3322']
         
-        self.relationship_properties = {"indicator": "Percentage of consumers", "indicator_code": "3322", "indicator_codes": ["3322"]}
+        self.relationship_properties = {"indicator": "Percentage of consumers", "indicator_code": "3322", "indicator_codes": ["3322"], "indicators": true}
     
     def get_migration_query(self) -> str:
         return load_sql("individual_quantitative_dietary_data_food_and_diet_measures.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class IndividualQuantitativeDietaryDataFoodAndDietMeasuresMigrator(GraphMigratio
         
         logger.info(f"  Filtering on indicator codes: 3322")
         
-        logger.info(f"  Relationship type properties: {'indicator_codes': ['3322'], 'indicator': 'Percentage of consumers', 'indicator_code': '3322'}")
+        logger.info(f"  Relationship type properties: {'indicator_codes': ['3322'], 'indicator': 'Percentage of consumers', 'indicator_code': '3322', 'indicators': True}")
         
         try:
             # Execute the main migration

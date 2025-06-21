@@ -18,7 +18,7 @@ class ForestryPulpPaperSurveyConsumesMigrator(GraphMigrationBase):
         
         self.element_codes = ['5034']
         
-        self.relationship_properties = {"element": "Consumption", "element_code": "5034", "element_codes": ["5034"]}
+        self.relationship_properties = {"element": "Consumption", "element_code": "5034", "element_codes": ["5034"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("forestry_pulp_paper_survey_consumes.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class ForestryPulpPaperSurveyConsumesMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 5034")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['5034'], 'element': 'Consumption', 'element_code': '5034'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['5034'], 'element': 'Consumption', 'element_code': '5034', 'elements': True}")
         
         try:
             # Execute the main migration

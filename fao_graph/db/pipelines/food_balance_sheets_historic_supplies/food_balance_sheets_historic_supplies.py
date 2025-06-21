@@ -18,7 +18,7 @@ class FoodBalanceSheetsHistoricSuppliesMigrator(GraphMigrationBase):
         
         self.element_codes = ['674', '684', '664', '5074', '5131', '5142', '5301', '5527']
         
-        self.relationship_properties = {"element": "Protein supply quantity (g/capita/day)", "element_code": "674", "element_codes": ["674", "684", "664", "5074", "5131", "5142", "5301", "5527"], "nutrient_type": "protein"}
+        self.relationship_properties = {"element": "Protein supply quantity (g/capita/day)", "element_code": "674", "element_codes": ["674", "684", "664", "5074", "5131", "5142", "5301", "5527"], "elements": true, "nutrient_type": "protein"}
     
     def get_migration_query(self) -> str:
         return load_sql("food_balance_sheets_historic_supplies.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class FoodBalanceSheetsHistoricSuppliesMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 674, 684, 664, 5074, 5131... (8 total)")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['674', '684', '664', '5074', '5131', '5142', '5301', '5527'], 'element': 'Protein supply quantity (g/capita/day)', 'element_code': '674', 'nutrient_type': 'protein'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['674', '684', '664', '5074', '5131', '5142', '5301', '5527'], 'element': 'Protein supply quantity (g/capita/day)', 'element_code': '674', 'elements': True, 'nutrient_type': 'protein'}")
         
         try:
             # Execute the main migration

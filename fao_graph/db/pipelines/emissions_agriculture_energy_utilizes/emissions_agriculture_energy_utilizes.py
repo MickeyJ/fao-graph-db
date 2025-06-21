@@ -18,7 +18,7 @@ class EmissionsAgricultureEnergyUtilizesMigrator(GraphMigrationBase):
         
         self.element_codes = ['72184']
         
-        self.relationship_properties = {"element": "Energy use in agriculture", "element_code": "72184", "element_codes": ["72184"]}
+        self.relationship_properties = {"element": "Energy use in agriculture", "element_code": "72184", "element_codes": ["72184"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("emissions_agriculture_energy_utilizes.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class EmissionsAgricultureEnergyUtilizesMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on element codes: 72184")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['72184'], 'element': 'Energy use in agriculture', 'element_code': '72184'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['72184'], 'element': 'Energy use in agriculture', 'element_code': '72184', 'elements': True}")
         
         try:
             # Execute the main migration

@@ -4,10 +4,14 @@ SELECT * FROM cypher('fao_graph', $$
     MATCH (target:RecipientCountryCodes {id: row.recipient_country_code_id})
     CREATE (source)-[r:SHARES {
         -- Dynamic properties from row
-        year: row.year,
-        value: row.value,
-        unit: row.unit,
-        -- Metadata
+        -- pattern: row.pattern,
+        -- source_fk: row.source_fk,
+        -- target_fk: row.target_fk,
+ 
+        year: row.year, 
+        unit: row.unit, 
+        value: row.value, 
+        note: row.note,        -- Metadata
         source_dataset: 'development_assistance_to_agriculture'
     }]->(target)
     RETURN r
@@ -17,3 +21,5 @@ WHERE row.donor_code_id IS NOT NULL
   AND row.recipient_country_code_id IS NOT NULL
   AND row.value > 0
 ;
+
+

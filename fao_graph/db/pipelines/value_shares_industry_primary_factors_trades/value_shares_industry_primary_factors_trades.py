@@ -18,7 +18,7 @@ class ValueSharesIndustryPrimaryFactorsTradesMigrator(GraphMigrationBase):
         
         self.factor_codes = ['22125']
         
-        self.relationship_properties = {"flow_direction": "unspecified", "industry": "Wholesale and retail trade", "industry_code": "22119", "industry_codes": ["22119"]}
+        self.relationship_properties = {"flow_direction": "unspecified", "industries": true, "industry": "Wholesale and retail trade", "industry_code": "22119", "industry_codes": ["22119"]}
     
     def get_migration_query(self) -> str:
         return load_sql("value_shares_industry_primary_factors_trades.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class ValueSharesIndustryPrimaryFactorsTradesMigrator(GraphMigrationBase):
         
         logger.info(f"  Filtering on factor codes: 22125")
         
-        logger.info(f"  Relationship type properties: {'industry_codes': ['22119'], 'industry': 'Wholesale and retail trade', 'industry_code': '22119', 'flow_direction': 'unspecified'}")
+        logger.info(f"  Relationship type properties: {'industry_codes': ['22119'], 'industry': 'Wholesale and retail trade', 'industry_code': '22119', 'industries': True, 'flow_direction': 'unspecified'}")
         
         try:
             # Execute the main migration

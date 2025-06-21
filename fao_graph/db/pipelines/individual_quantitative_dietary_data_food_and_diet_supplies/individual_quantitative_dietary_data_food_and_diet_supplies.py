@@ -18,7 +18,7 @@ class IndividualQuantitativeDietaryDataFoodAndDietSuppliesMigrator(GraphMigratio
         
         self.element_codes = ['6120', '6121', '6123', '6128', '6206', '6209']
         
-        self.relationship_properties = {"element": "Value", "element_code": "6120", "element_codes": ["6120", "6121", "6123", "6128", "6206", "6209"]}
+        self.relationship_properties = {"element": "Value", "element_code": "6120", "element_codes": ["6120", "6121", "6123", "6128", "6206", "6209"], "elements": true}
     
     def get_migration_query(self) -> str:
         return load_sql("individual_quantitative_dietary_data_food_and_diet_supplies.cypher.sql", Path(__file__).parent)
@@ -35,7 +35,7 @@ class IndividualQuantitativeDietaryDataFoodAndDietSuppliesMigrator(GraphMigratio
         
         logger.info(f"  Filtering on element codes: 6120, 6121, 6123, 6128, 6206... (6 total)")
         
-        logger.info(f"  Relationship type properties: {'element_codes': ['6120', '6121', '6123', '6128', '6206', '6209'], 'element': 'Value', 'element_code': '6120'}")
+        logger.info(f"  Relationship type properties: {'element_codes': ['6120', '6121', '6123', '6128', '6206', '6209'], 'element': 'Value', 'element_code': '6120', 'elements': True}")
         
         try:
             # Execute the main migration

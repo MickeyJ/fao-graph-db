@@ -7,6 +7,8 @@ CREATE INDEX IF NOT EXISTS idx_household_consumption_and_expenditure_surveys_foo
 ON fao_graph."CONSUMES" USING btree ((properties->>'indicator'));
 CREATE INDEX IF NOT EXISTS idx_household_consumption_and_expenditure_surveys_food_and_diet_consumes_indicator_code
 ON fao_graph."CONSUMES" USING btree ((properties->>'indicator_code'));
+CREATE INDEX IF NOT EXISTS idx_household_consumption_and_expenditure_surveys_food_and_diet_consumes_indicators
+ON fao_graph."CONSUMES" USING btree ((properties->>'indicators'));
 
 -- Index on data properties
 
