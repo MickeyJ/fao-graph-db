@@ -1,7 +1,9 @@
--- Indexes for partner_country_code nodes
-CREATE INDEX IF NOT EXISTS idx_partner_country_codes_partner_country_code
-ON fao.partner_country_code USING btree ((properties->>'partner_country_code'));
+-- yaml_node_indexes.sql.jinja2
+-- Indexes for PartnerCountryCode nodes
+CREATE INDEX IF NOT EXISTS idx_partner_country_codes_id
+ON fao_graph.'PartnerCountryCode' (id);
 
-CREATE INDEX IF NOT EXISTS idx_partner_country_codes_source_dataset  
-ON fao.partner_country_code USING btree ((properties->>'source_dataset'));
 
+-- Compound index for node lookups
+CREATE INDEX IF NOT EXISTS idx_partner_country_codes_properties
+ON fao_graph.'PartnerCountryCode' USING GIN (properties);

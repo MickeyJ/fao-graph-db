@@ -1,1 +1,1 @@
-"""Migration pipeline for item_code"""
+"""Migration pipeline for ItemCode nodes"""

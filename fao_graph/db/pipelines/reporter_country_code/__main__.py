@@ -1,18 +1,15 @@
-"""Run reporter_country_code migration"""
-from .reporter_country_code import ReporterCountryCodeMigrator
-from fao_graph.logger import logger
+"""
+Migration pipeline for reporter_country_code
+Generated from YAML configuration
+"""
+from fao_graph.db.pipelines.reporter_country_code.reporter_country_code import ReporterCountryCodeMigrator
 
 
-def run_migration():
-    """Execute reporter_country_code migration"""
-    try:
-        migrator = ReporterCountryCodeMigrator()
-        migrator.migrate()
-        migrator.verify_migration()
-    except Exception as e:
-        logger.error(f"Migration failed: {e}")
-        raise
+def main():
+    """Run the migration"""
+    migrator = ReporterCountryCodeMigrator()
+    migrator.migrate()
 
 
 if __name__ == "__main__":
-    run_migration()
+    main()

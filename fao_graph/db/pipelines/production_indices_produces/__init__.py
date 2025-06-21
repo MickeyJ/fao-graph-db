@@ -1,1 +1,0 @@
-"""Migration pipeline for production_indices PRODUCES relationships"""

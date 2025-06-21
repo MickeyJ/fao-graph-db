@@ -1,18 +1,15 @@
-"""Run item_code migration"""
-from .item_code import ItemCodeMigrator
-from fao_graph.logger import logger
+"""
+Migration pipeline for item_code
+Generated from YAML configuration
+"""
+from fao_graph.db.pipelines.item_code.item_code import ItemCodeMigrator
 
 
-def run_migration():
-    """Execute item_code migration"""
-    try:
-        migrator = ItemCodeMigrator()
-        migrator.migrate()
-        migrator.verify_migration()
-    except Exception as e:
-        logger.error(f"Migration failed: {e}")
-        raise
+def main():
+    """Run the migration"""
+    migrator = ItemCodeMigrator()
+    migrator.migrate()
 
 
 if __name__ == "__main__":
-    run_migration()
+    main()

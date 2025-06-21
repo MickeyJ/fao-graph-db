@@ -1,7 +1,9 @@
--- Indexes for item_code nodes
-CREATE INDEX IF NOT EXISTS idx_item_codes_item_code
-ON fao.item_code USING btree ((properties->>'item_code'));
+-- yaml_node_indexes.sql.jinja2
+-- Indexes for ItemCode nodes
+CREATE INDEX IF NOT EXISTS idx_item_codes_id
+ON fao_graph.'ItemCode' (id);
 
-CREATE INDEX IF NOT EXISTS idx_item_codes_source_dataset  
-ON fao.item_code USING btree ((properties->>'source_dataset'));
 
+-- Compound index for node lookups
+CREATE INDEX IF NOT EXISTS idx_item_codes_properties
+ON fao_graph.'ItemCode' USING GIN (properties);

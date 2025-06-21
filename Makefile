@@ -91,6 +91,16 @@ db-use-local-admin:
 	cp local-admin.env .env
 	@echo "Switched to local database as admin"
 
+# =-=-=--=-=-=-=-=-=-=-=--=-=-=-=-=-
+# 				Database/Apache AGE 
+# =-=-=--=-=-=-=-=-=-=-=--=-=-=-=-=-
+
+fao-graph-migrate-all-local:
+	$(MAKE) db-use-local
+	$(MAKE) INTERNAL-fao-graph-migrate-all
+
+INTERNAL-fao-graph-migrate-all:
+	$(ACTIVATE) $(PYTHON) -m fao_graph.db.orchestrate_migration
 
 # =-=-=--=-=-=-=-=-=-=-=--=-=-=-=-=-
 # 				Database/Neo4j 

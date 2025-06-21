@@ -1,7 +1,9 @@
--- Indexes for area_code nodes
-CREATE INDEX IF NOT EXISTS idx_area_codes_area_code
-ON fao.area_code USING btree ((properties->>'area_code'));
+-- yaml_node_indexes.sql.jinja2
+-- Indexes for AreaCode nodes
+CREATE INDEX IF NOT EXISTS idx_area_codes_id
+ON fao_graph.'AreaCode' (id);
 
-CREATE INDEX IF NOT EXISTS idx_area_codes_source_dataset  
-ON fao.area_code USING btree ((properties->>'source_dataset'));
 
+-- Compound index for node lookups
+CREATE INDEX IF NOT EXISTS idx_area_codes_properties
+ON fao_graph.'AreaCode' USING GIN (properties);

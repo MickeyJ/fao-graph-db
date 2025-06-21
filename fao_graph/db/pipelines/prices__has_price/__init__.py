@@ -1,0 +1,1 @@
+"""Migration pipeline for prices HAS_PRICE relationships"""

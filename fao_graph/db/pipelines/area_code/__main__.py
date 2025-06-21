@@ -1,18 +1,15 @@
-"""Run area_code migration"""
-from .area_code import AreaCodeMigrator
-from fao_graph.logger import logger
+"""
+Migration pipeline for area_code
+Generated from YAML configuration
+"""
+from fao_graph.db.pipelines.area_code.area_code import AreaCodeMigrator
 
 
-def run_migration():
-    """Execute area_code migration"""
-    try:
-        migrator = AreaCodeMigrator()
-        migrator.migrate()
-        migrator.verify_migration()
-    except Exception as e:
-        logger.error(f"Migration failed: {e}")
-        raise
+def main():
+    """Run the migration"""
+    migrator = AreaCodeMigrator()
+    migrator.migrate()
 
 
 if __name__ == "__main__":
-    run_migration()
+    main()

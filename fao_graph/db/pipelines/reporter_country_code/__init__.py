@@ -1,1 +1,1 @@
-"""Migration pipeline for reporter_country_code"""
+"""Migration pipeline for ReporterCountryCode nodes"""

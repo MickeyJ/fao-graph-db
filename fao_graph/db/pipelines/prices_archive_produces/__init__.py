@@ -1,1 +1,0 @@
-"""Migration pipeline for prices_archive PRODUCES relationships"""

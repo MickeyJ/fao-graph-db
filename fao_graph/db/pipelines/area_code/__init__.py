@@ -1,1 +1,1 @@
-"""Migration pipeline for area_code"""
+"""Migration pipeline for AreaCode nodes"""

@@ -1,1 +1,1 @@
-"""Migration pipeline for partner_country_code"""
+"""Migration pipeline for PartnerCountryCode nodes"""
