@@ -7,6 +7,7 @@ from sqlalchemy import text
 from fao_graph.utils import load_sql
 from fao_graph.logger import logger
 from fao_graph.db.database import get_session
+from fao_graph.core.exceptions import MigrationError
 
 # Import all node migrators
 from fao_graph.db.pipelines.area_code.area_code import AreaCodeMigrator
@@ -108,7 +109,7 @@ def create_global_indexes():
         logger.error(f"Failed to create global indexes: {e}")
         raise
 
-def create_reference_links(self) -> None:
+def create_reference_links() -> None:
         """Create links between reference nodes with same codes."""
         logger.info("Creating reference links...")
 
@@ -147,7 +148,7 @@ def create_reference_links(self) -> None:
             logger.success("Linked references successfully")
         except Exception as e:
             logger.error(f"Failed to link references: {e}")
-            raise
+            raise MigrationError(f"Failed to link reference nodes: {e}")
 
 
 def main():

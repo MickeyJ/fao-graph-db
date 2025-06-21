@@ -2,7 +2,7 @@
 # Generated migrator for relationship food_security_data__experiences
 from pathlib import Path
 from sqlalchemy import text
-
+from fao_graph.core.exceptions import MigrationError
 from fao_graph.db.database import get_session
 from fao_graph.db.graph_migration_base import GraphMigrationBase
 from fao_graph.utils import load_sql
@@ -38,32 +38,39 @@ class FoodSecurityDataExperiencesMigrator(GraphMigrationBase):
     def create(self, records):
         """Create relationships in AGE"""
         with get_session() as session:
-            for record in records:
-                query = text("""
-                    SELECT * FROM cypher('fao_graph', $$
-                        MATCH (source:AreaCode {id: $source_id, source_dataset: "food_security_data" })
-                        MATCH (target:ItemCode {id: $target_id, source_dataset: "food_security_data" })
-                        CREATE (source)-[r:EXPERIENCES $props]->(target)
-                        RETURN r
-                    $$, $params) AS (result agtype)
-                """)
-                
-                props = {
-                    "element_code": getattr(record, "element_code"),
-                    "element": getattr(record, "element"),
-                    "flag": getattr(record, "flag"),
-                    "description": getattr(record, "description"),
-                    "source_dataset": "food_security_data"
-                }
-                
-                params = {
-                    "source_id": getattr(record, "area_code_id"),
-                    "target_id": getattr(record, "item_code_id"),
-                    "props": props
-                }
-                
-                session.execute(query, {
-                    "params": params
-                })
-                self.created += 1
 
+            try:
+                    
+                for record in records:
+                    query = text("""
+                        SELECT * FROM cypher('fao_graph', $$
+                            MATCH (source:AreaCode {id: $source_id, source_dataset: "food_security_data" })
+                            MATCH (target:ItemCode {id: $target_id, source_dataset: "food_security_data" })
+                            CREATE (source)-[r:EXPERIENCES $props]->(target)
+                            RETURN r
+                        $$, $params) AS (result agtype)
+                    """)
+                    
+                    props = {
+                        "element_code": getattr(record, "element_code"),
+                        "element": getattr(record, "element"),
+                        "flag": getattr(record, "flag"),
+                        "description": getattr(record, "description"),
+                        "source_dataset": "food_security_data"
+                    }
+                    
+                    params = {
+                        "source_id": getattr(record, "area_code_id"),
+                        "target_id": getattr(record, "item_code_id"),
+                        "props": props
+                    }
+                    
+                    session.execute(query, {
+                        "params": params
+                    })
+                    self.created += 1
+
+                session.commit()
+            except Exception as e:
+                session.rollback()
+                raise MigrationError(f"Failed to create relationships: {e}")
