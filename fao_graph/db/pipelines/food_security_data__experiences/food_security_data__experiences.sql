@@ -11,7 +11,7 @@ FROM food_security_data t
   JOIN flags ON t.flag_id = flags.id
 WHERE t.area_code_id IS NOT NULL
   AND t.item_code_id IS NOT NULL
-  AND elements.element_code IN ('21010', '21011', '21012', '21013', '21014', '21015', '21016', '21017')
+  AND elements.element_code IN ('61212', '61322', '61211', '61321')
   AND flags.flag IN ('A', 'X', 'E')
 ORDER BY t.id
 LIMIT :limit OFFSET :offset

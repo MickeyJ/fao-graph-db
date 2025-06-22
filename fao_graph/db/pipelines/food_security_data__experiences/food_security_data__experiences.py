@@ -3,8 +3,6 @@
 import json
 from pathlib import Path
 from sqlalchemy import text
-from fao_graph.core.exceptions import MigrationError
-from fao_graph.db.database import get_session
 from fao_graph.db.graph_migration_base import GraphMigrationBase
 from fao_graph.utils import load_sql
 from fao_graph.logger import logger
@@ -32,80 +30,74 @@ class FoodSecurityDataExperiencesMigrator(GraphMigrationBase):
             JOIN flags ON t.flag_id = flags.id
             WHERE t.area_code_id IS NOT NULL
                 AND t.item_code_id IS NOT NULL
-                AND elements.element_code IN ('21010', '21011', '21012', '21013', '21014', '21015', '21016', '21017')
+                AND elements.element_code IN ('61212', '61322', '61211', '61321')
                 AND flags.flag IN ('A', 'X', 'E')
         """
     
     def create(self, records, session):
         """Create relationships in AGE"""
 
-        try:
-            for record in records:
-                # Get source and target ids
-                source_id = getattr(record, "area_code_id")
-                target_id = getattr(record, "item_code_id")
+        for record in records:
+            # Get source and target ids
+            source_id = getattr(record, "area_code_id")
+            target_id = getattr(record, "item_code_id")
 
-                # Log every 500 records
-                if self.created % 500 == 0:
-                    logger.info(f"food_security_data - (area_code_id: {source_id})-[:EXPERIENCES]->(item_code_id: {target_id})")
-                
-                # Build relationship properties string
-                props_parts = []
-                
-                
-                if hasattr(record, "element_code") and getattr(record, "element_code") is not None:
-                    value = getattr(record, "element_code")
-                    if isinstance(value, str):
-                        value = value.replace("'", "\\'")
-                        props_parts.append(f'element_code: "{value}"')
-                        # props_parts.append(f"element_code: '{value}'")
-                    else:
-                        props_parts.append(f"element_code: {value}")
-                        
-                if hasattr(record, "element") and getattr(record, "element") is not None:
-                    value = getattr(record, "element")
-                    if isinstance(value, str):
-                        value = value.replace("'", "\\'")
-                        props_parts.append(f'element: "{value}"')
-                        # props_parts.append(f"element: '{value}'")
-                    else:
-                        props_parts.append(f"element: {value}")
-                if hasattr(record, "flag") and getattr(record, "flag") is not None:
-                    value = getattr(record, "flag")
-                    if isinstance(value, str):
-                        value = value.replace("'", "\\'")
-                        props_parts.append(f'flag: "{value}"')
-                        # props_parts.append(f"flag: '{value}'")
-                    else:
-                        props_parts.append(f"flag: {value}")
-                        
-                if hasattr(record, "description") and getattr(record, "description") is not None:
-                    value = getattr(record, "description")
-                    if isinstance(value, str):
-                        value = value.replace("'", "\\'")
-                        props_parts.append(f'description: "{value}"')
-                        # props_parts.append(f"description: '{value}'")
-                    else:
-                        props_parts.append(f"description: {value}")
-                
-                props_parts.append("source_dataset: 'food_security_data'")
-                props_str = ", ".join(props_parts)
-                
-                # Build query without parameters
-                query = text(f"""
-                    SELECT * FROM cypher('fao_graph', $$
-                        MATCH (source:AreaCode """ + "{" + f"id: {source_id}, source_dataset: 'food_security_data'" + "}" + f""")
-                        MATCH (target:ItemCode """ + "{" + f"id: {target_id}, source_dataset: 'food_security_data'" + "}" + f""")
-                        CREATE (source)-[r:EXPERIENCES """ + "{" + props_str + "}" + f"""]->(target)
-                        RETURN r
-                    $$) AS (result agtype)
-                """)
-                
-                session.execute(query)
-                self.created += 1
-
-            session.commit()
-        except Exception as e:
-            session.rollback()
-            raise MigrationError(f"Failed to create relationships: {e}")
+            # Log every 500 records
+            if self.created % 500 == 0:
+                logger.info(f"food_security_data - (area_code_id: {source_id})-[:EXPERIENCES]->(item_code_id: {target_id})")
+            
+            # Build relationship properties string
+            props_parts = []
+            
+            
+            if hasattr(record, "element_code") and getattr(record, "element_code") is not None:
+                value = getattr(record, "element_code")
+                if isinstance(value, str):
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f'element_code: "{value}"')
+                    # props_parts.append(f"element_code: '{value}'")
+                else:
+                    props_parts.append(f"element_code: {value}")
+                    
+            if hasattr(record, "element") and getattr(record, "element") is not None:
+                value = getattr(record, "element")
+                if isinstance(value, str):
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f'element: "{value}"')
+                    # props_parts.append(f"element: '{value}'")
+                else:
+                    props_parts.append(f"element: {value}")
+            if hasattr(record, "flag") and getattr(record, "flag") is not None:
+                value = getattr(record, "flag")
+                if isinstance(value, str):
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f'flag: "{value}"')
+                    # props_parts.append(f"flag: '{value}'")
+                else:
+                    props_parts.append(f"flag: {value}")
+                    
+            if hasattr(record, "description") and getattr(record, "description") is not None:
+                value = getattr(record, "description")
+                if isinstance(value, str):
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f'description: "{value}"')
+                    # props_parts.append(f"description: '{value}'")
+                else:
+                    props_parts.append(f"description: {value}")
+            
+            props_parts.append("source_dataset: 'food_security_data'")
+            props_str = ", ".join(props_parts)
+            
+            # Build query without parameters
+            query = text(f"""
+                SELECT * FROM cypher('fao_graph', $$
+                    MATCH (source:AreaCode """ + "{" + f"id: {source_id}, source_dataset: 'food_security_data'" + "}" + f""")
+                    MATCH (target:ItemCode """ + "{" + f"id: {target_id}, source_dataset: 'food_security_data'" + "}" + f""")
+                    CREATE (source)-[r:EXPERIENCES """ + "{" + props_str + "}" + f"""]->(target)
+                    RETURN r
+                $$) AS (result agtype)
+            """)
+            
+            session.execute(query)
+            self.created += 1
     

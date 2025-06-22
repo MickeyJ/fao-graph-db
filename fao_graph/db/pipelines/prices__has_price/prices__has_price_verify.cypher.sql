@@ -1,4 +1,4 @@
-- yaml_relationship_verify.cypher.sql.jinja2
+-- yaml_relationship_verify.cypher.sql.jinja2
 -- Verification queries for HAS_PRICE relationships from prices
 SELECT count(*) FROM cypher('fao_graph', $$
     MATCH ()-[r:HAS_PRICE]->()

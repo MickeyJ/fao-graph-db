@@ -15,8 +15,10 @@ FROM trade_detailed_trade_matrix t
 WHERE t.reporter_country_code_id IS NOT NULL
   AND t.partner_country_code_id IS NOT NULL
   AND t.value > 0
-  AND t.year >= 2020
-  AND elements.element_code IN ('5610', '5910', '5622', '5922')
-  AND flags.flag IN ('A', 'X', 'E')
+  AND t.value != 'NaN'
+  AND t.value IS NOT NULL
+  AND t.year >= 2022
+  AND elements.element_code IN ('5910', '5922', '5610', '5622')
+  AND flags.flag IN ('A')
 ORDER BY t.id
 LIMIT :limit OFFSET :offset

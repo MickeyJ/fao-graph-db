@@ -28,3 +28,4 @@ tabulate
 tqdm>=4.65.0
 
 neo4j>=5.0.0
+psutil

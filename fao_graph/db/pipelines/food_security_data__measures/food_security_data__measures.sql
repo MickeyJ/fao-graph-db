@@ -12,7 +12,9 @@ FROM food_security_data t
 WHERE t.area_code_id IS NOT NULL
   AND t.item_code_id IS NOT NULL
   AND t.value > 0
-  AND elements.element_code IN ('210011', '210012', '210013', '210041')
+  AND t.value != 'NaN'
+  AND t.value IS NOT NULL
+  AND elements.element_code IN ('6123', '6128', '6126', '6125', '6132', '6121', '6173', '6124')
   AND flags.flag IN ('A', 'X', 'E')
 ORDER BY t.id
 LIMIT :limit OFFSET :offset
