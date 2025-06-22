@@ -30,6 +30,9 @@ relationships:
         - field: flag
           values: ["'A'", "'X'", "'E'"]
           description: "official and estimated data"
+        - field: year
+          min_value: 2020
+          description: "only data since 2020"
       include_property_groups:
         - time_columns
         - value_columns
@@ -51,6 +54,9 @@ relationships:
         - field: flag
           values: ["'A'", "'X'", "'E'"]
           description: "official and estimated data"
+        - field: year
+          min_value: 2020
+          description: "only data since 2020"
       include_property_groups:
         - time_columns
         - value_columns
@@ -71,6 +77,9 @@ relationships:
         - field: flag
           values: ["'A'", "'X'", "'E'"]
           description: "official and estimated data"
+        - field: year
+          min_value: 2020
+          description: "only data since 2020"
       include_property_groups:
         - time_columns
         - value_columns
@@ -91,6 +100,9 @@ relationships:
         - field: flag
           values: ["'A'", "'X'", "'E'"]
           description: "official and estimated data"
+        - field: year
+          min_value: 2020
+          description: "only data since 2020"
       include_property_groups:
         - time_columns
         - value_columns
@@ -151,6 +163,9 @@ relationships:
         - field: flag
           values: ["'A'", "'X'"]
           description: "official and estimated data"
+        - field: year
+          min_value: 2020
+          description: "only data since 2020"
       include_property_groups:
         - time_columns
         - value_columns

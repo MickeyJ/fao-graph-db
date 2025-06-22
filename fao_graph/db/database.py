@@ -26,7 +26,9 @@ def get_engine():
     """Create engine only when needed"""
     logger.success(f"AGE DB connection: postgresql+psycopg2://{DB_USER}:[password]@{DB_HOST}:{DB_PORT}/{DB_NAME}")
     # Use NullPool to avoid connection pool issues with AGE
-    return create_engine(DATABASE_URL, echo=False, poolclass=NullPool)
+    return create_engine(
+        DATABASE_URL, echo=False, poolclass=NullPool, connect_args={"options": "-c search_path=ag_catalog,public"}
+    )
 
 
 @lru_cache
@@ -36,10 +38,32 @@ def get_session_factory():
 
 
 def initialize_age_session(session):
-    """Initialize AGE extension for the session"""
-    session.execute(text("LOAD 'age';"))
-    session.execute(text('SET search_path = ag_catalog, "$user", public;'))
-    session.commit()
+    try:
+        # Load AGE
+        # Set search path to include ag_catalog FIRST
+        session.execute(text("LOAD 'age';"))
+        session.execute(text('SET search_path = ag_catalog, public, "$user";'))
+        session.execute(text("SET statement_timeout = '60s'"))
+
+        # Verify the function is available
+        result = session.execute(
+            text(
+                """
+            SELECT proname FROM pg_proc 
+            WHERE proname = 'create_graph' 
+            AND pronamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'ag_catalog')
+        """
+            )
+        )
+
+        if not result.first():
+            raise Exception("create_graph function not found even after loading AGE")
+
+        session.commit()
+        logger.debug("AGE session initialized successfully")
+    except Exception as e:
+        logger.error(f"Failed to initialize AGE session: {e}")
+        raise
 
 
 @contextmanager
@@ -57,6 +81,32 @@ def get_session() -> Iterator[Session]:  # Add return type hint
         raise
     finally:
         session.close()
+
+
+def ensure_age_extension():
+    """Ensure AGE extension is created"""
+    with get_session() as session:
+        try:
+            # Check if extension exists
+            result = session.execute(
+                text(
+                    """
+                SELECT * FROM pg_extension WHERE extname = 'age'
+            """
+                )
+            )
+
+            if not result.first():
+                logger.info("Creating AGE extension...")
+                session.execute(text("CREATE EXTENSION age"))
+                session.commit()
+                logger.success("AGE extension created")
+            else:
+                logger.info("AGE extension already exists")
+
+        except Exception as e:
+            logger.error(f"Failed to create AGE extension: {e}")
+            raise
 
 
 def get_db():

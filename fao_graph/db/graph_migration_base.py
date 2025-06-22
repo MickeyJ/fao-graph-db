@@ -1,19 +1,24 @@
+import json
 from abc import ABC, abstractmethod
+from time import time
 from typing import Dict, List, Sequence, Any, Optional, Type, TypeVar
 from sqlalchemy import text
+from sqlalchemy.orm import Session
 from sqlalchemy.engine import Row
 from fao_graph.core.exceptions import MigrationError
 from fao_graph.db.database import get_session, get_db
 from fao_graph.utils import load_sql
-from logger import logger
+from fao_graph.logger import logger
 
 
 class GraphMigrationBase(ABC):
     """Base class for all graph migrations"""
 
-    def __init__(self, table_name: str, migration_type: str):
+    def __init__(self, table_name: str, migration_type: str, project_name: str, node_label: str):
+        self.project_name = project_name
         self.table_name = table_name
         self.migration_type = migration_type
+        self.node_label = node_label
         self.batch_size = 5000
         self.created = 0
         self.updated = 0
@@ -41,11 +46,11 @@ class GraphMigrationBase(ABC):
         """Return SQL query to create indexes."""
         return ""
 
-    def create(self, records: Sequence[Row]) -> None:
+    def create(self, records: Sequence[Row], session: Session) -> None:
         """Create nodes or relationships"""
         pass
 
-    def update(self, records: Sequence[Row]) -> None:
+    def update(self, records: Sequence[Row], session: Session) -> None:
         """Update nodes or relationships"""
         pass
 
@@ -54,27 +59,34 @@ class GraphMigrationBase(ABC):
 
         Can be overridden for simpler migrations that don't need batch processing.
         """
-        logger.info(f"Starting {self.table_name} migration in {mode} mode from offset {start_offset:,}...")
-        logger.info(f"Using batch size: {self.batch_size}")
 
         try:
 
             if self.migration_type == "node":
-                # For nodes: execute the cypher query directly (bulk creation)
-
                 with get_session() as session:
-                    cypher_query = self.get_migration_query()
-                    session.execute(text(cypher_query))
-                    session.commit()
-                    logger.success(f"Created all {self.table_name} nodes")
+                    records = session.execute(text(f"SELECT * FROM {self.table_name}")).fetchall()
+
+                    self.create(records, session)
+                    self.run_verification_query(session, self.table_name)
+                    # session.commit()
 
             else:
-                # For relationships: batch processing with LIMIT/OFFSET
+                logger.info(
+                    f"Starting {self.table_name} relationship migration in {mode} mode from offset {start_offset:,}..."
+                )
+                logger.info(f"Using batch size: {self.batch_size}")
                 # Count total records
                 count_query = text(self.get_count_query())
 
+                logger.warning(f"count_query: {count_query}")
+
                 with get_session() as session:
+                    logger.info("Starting count query...")
+                    start_time = time()
                     total_records = session.execute(count_query).scalar() or 0
+
+                    elapsed = time() - start_time
+                    logger.info(f"Count query took {elapsed:.2f} seconds")
                     logger.info(f"Total records to process: {total_records:,}")
 
                     if start_offset > 0:
@@ -87,9 +99,9 @@ class GraphMigrationBase(ABC):
                 offset = start_offset
 
                 while offset < total_records:
-                    with get_session() as pg_session:
+                    with get_session() as session:
                         # Fetch batch
-                        result = pg_session.execute(query, {"limit": self.batch_size, "offset": offset})
+                        result = session.execute(query, {"limit": self.batch_size, "offset": offset})
                         records = result.fetchall()
 
                         if not records:
@@ -98,9 +110,9 @@ class GraphMigrationBase(ABC):
                         # Process batch based on mode
                         try:
                             if mode == "create":
-                                self.create(records)
+                                self.create(records, session)
                             elif mode == "update":
-                                self.update(records)
+                                self.update(records, session)
                             else:
                                 raise ValueError(f"Unknown mode: {mode}")
                         except Exception as e:
@@ -113,6 +125,8 @@ class GraphMigrationBase(ABC):
                         # Progress logging
                         pct_complete = offset / total_records * 100
                         self.log_progress(offset, total_records, pct_complete)
+
+                self.run_verification_query(session, self.table_name)
 
         except KeyboardInterrupt:
             logger.error(f"\nMigration interrupted")
@@ -146,31 +160,23 @@ class GraphMigrationBase(ABC):
     def verify(self) -> None:
         """Verify the migration completed successfully."""
 
+        # Verification complete: [('1759119356', '"Agriculture research spending"'), ('1364990269', '"Agricultural researchers (FTE)"'), ('111920601', '"Farm gate"'), ('943360549', '"Land
+        # Use change"'), ('264809525', '"Pre- and Post- Production"'), ('1698056634', '"Agrifood systems"'), ('1169893819', '"Emissions on agricultural land"'), ('1879356118', '"Emissions
+        # from crops"'), ('1250127877', '"Emissions from livestock"'), ('784534853', '"AFOLU"')]
+
         try:
             with get_session() as session:
-                result = session.execute(text(self.get_verification_query())).fetchall()
+                result = session.execute(text(self.get_verification_query())).mappings().all()
                 logger.info(f"Verification complete: {result}")
+                # logger.info(f"Verification complete: {json.dumps(result, indent=2)}")
 
         except Exception as e:
             logger.error(f"Verification Failed: {e}")
             raise MigrationError("Migration Verification Failed") from e
 
-    def run_verification_query(self, session, name: str, query: str) -> None:
+    def run_verification_query(self, session, name) -> None:
         """Run a single verification query. Override for custom handling."""
         logger.info(f"Running verification: {name}")
-        result = session.execute(text(query))
+        result = session.execute(text(self.get_verification_query())).mappings().all()
         for record in result:
-            logger.info(f"  {dict(record)}")
-
-    def transform_records_for_age(self, records: Sequence[Row], field_mapping: Dict[str, str]) -> List[Dict[str, Any]]:
-        """Helper to transform PostgreSQL records to AGE format."""
-        relationships = []
-        for record in records:
-            rel_data = {}
-            for pg_field, age_field in field_mapping.items():
-                value = getattr(record, pg_field)
-                if pg_field == "value" and value is not None:
-                    value = float(value)
-                rel_data[age_field] = value
-            relationships.append(rel_data)
-        return relationships
+            logger.info(f"  {record}")

@@ -6,7 +6,7 @@ from pathlib import Path
 from sqlalchemy import text
 from fao_graph.utils import load_sql
 from fao_graph.logger import logger
-from fao_graph.db.database import get_session
+from fao_graph.db.database import get_session, ensure_age_extension
 from fao_graph.core.exceptions import MigrationError
 
 # Import all node migrators
@@ -121,7 +121,7 @@ def create_reference_links() -> None:
                         MATCH (a1:AreaCode), (a2:AreaCode)
                         WHERE a1.area_code = a2.area_code 
                         AND a1.id < a2.id
-                        CREATE (a1)-[:SAME_AREA_CODE]->(a2)
+                        CREATE (a1)-[rel:SAME_AREA_CODE]->(a2)
                     $$) AS (result agtype);
                 """
                 
@@ -135,7 +135,7 @@ def create_reference_links() -> None:
                         MATCH (i1:ItemCode), (i2:ItemCode)
                         WHERE i1.item_code = i2.item_code 
                         AND i1.id < i2.id
-                        CREATE (i1)-[:SAME_ITEM_CODE]->(i2)
+                        CREATE (i1)-[rel:SAME_ITEM_CODE]->(i2)
                     $$) AS (result agtype);
                 """
                 
@@ -154,6 +154,9 @@ def create_reference_links() -> None:
 def main():
     """Run all migrations in order"""
     logger.info("Starting FAO Graph Database Migration")
+
+    # Ensure AGE extension is created
+    ensure_age_extension()
     
     # Create graph
     create_graph()
@@ -161,11 +164,11 @@ def main():
     # Migrate nodes first
     migrate_nodes()
     
-    # Then migrate relationships
-    migrate_relationships()
+    # # Then migrate relationships
+    # migrate_relationships()
     
-    # Create global indexes
-    create_global_indexes()
+    # # Create global indexes
+    # create_global_indexes()
 
     # Link duplicate reference nodes
     create_reference_links()
