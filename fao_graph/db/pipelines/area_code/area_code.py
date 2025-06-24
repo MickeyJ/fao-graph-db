@@ -12,8 +12,12 @@ class AreaCodeMigrator(GraphMigrationBase):
     """Migrator for AreaCode nodes from area_codes"""
     
     def __init__(self):
-        super().__init__("area_codes", "node", "fao_graph", "AreaCode")
-        self.node_label = "AreaCode"
+        super().__init__(
+            "area_codes", 
+            "node", 
+            "fao_graph", 
+            "AreaCode", 
+        )
     
     def get_migration_query(self) -> str:
         return load_sql("area_code.cypher.sql", Path(__file__).parent)
@@ -29,11 +33,12 @@ class AreaCodeMigrator(GraphMigrationBase):
 
         logger.info(f"Creating AreaCode nodes")
 
+        # session.execute(text("SELECT create_vlabel('fao_graph', 'AreaCode');"))
+
         for record in records:
             # Build properties string
             props_parts = []
 
-            
             # Always include id first
             props_parts.append(f"id: {record.id}")
             
@@ -42,8 +47,8 @@ class AreaCodeMigrator(GraphMigrationBase):
                 
                 if isinstance(value, str):
                     # Escape single quotes for Cypher
-                    # value = value.replace("'", "\\'")
-                    props_parts.append(f'area_code: "{value}"')
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f"area_code: '{value}'")
                 else:
                     props_parts.append(f"area_code: {value}")
             if hasattr(record, "area") and getattr(record, "area") is not None:
@@ -51,8 +56,8 @@ class AreaCodeMigrator(GraphMigrationBase):
                 
                 if isinstance(value, str):
                     # Escape single quotes for Cypher
-                    # value = value.replace("'", "\\'")
-                    props_parts.append(f'area: "{value}"')
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f"area: '{value}'")
                 else:
                     props_parts.append(f"area: {value}")
             if hasattr(record, "area_code_m49") and getattr(record, "area_code_m49") is not None:
@@ -60,8 +65,8 @@ class AreaCodeMigrator(GraphMigrationBase):
                 
                 if isinstance(value, str):
                     # Escape single quotes for Cypher
-                    # value = value.replace("'", "\\'")
-                    props_parts.append(f'area_code_m49: "{value}"')
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f"area_code_m49: '{value}'")
                 else:
                     props_parts.append(f"area_code_m49: {value}")
             if hasattr(record, "source_dataset") and getattr(record, "source_dataset") is not None:
@@ -69,8 +74,8 @@ class AreaCodeMigrator(GraphMigrationBase):
                 
                 if isinstance(value, str):
                     # Escape single quotes for Cypher
-                    # value = value.replace("'", "\\'")
-                    props_parts.append(f'source_dataset: "{value}"')
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f"source_dataset: '{value}'")
                 else:
                     props_parts.append(f"source_dataset: {value}")
             

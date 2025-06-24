@@ -8,5 +8,6 @@ $$) as (count agtype);
 -- Sample nodes
 SELECT * FROM cypher('fao_graph', $$
     MATCH (n:ReporterCountryCode)
-    RETURN n.id, n.reporter_countries    LIMIT 10
-$$) as (id agtype, reporter_countries agtype);
+    RETURN n.id, n.reporter_country_code, n.reporter_countries
+    LIMIT 10
+$$) as (id agtype, reporter_country_code agtype, reporter_countries agtype);

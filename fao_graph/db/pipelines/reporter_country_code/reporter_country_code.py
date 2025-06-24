@@ -12,8 +12,12 @@ class ReporterCountryCodeMigrator(GraphMigrationBase):
     """Migrator for ReporterCountryCode nodes from reporter_country_codes"""
     
     def __init__(self):
-        super().__init__("reporter_country_codes", "node", "fao_graph", "ReporterCountryCode")
-        self.node_label = "ReporterCountryCode"
+        super().__init__(
+            "reporter_country_codes", 
+            "node", 
+            "fao_graph", 
+            "ReporterCountryCode", 
+        )
     
     def get_migration_query(self) -> str:
         return load_sql("reporter_country_code.cypher.sql", Path(__file__).parent)
@@ -29,11 +33,12 @@ class ReporterCountryCodeMigrator(GraphMigrationBase):
 
         logger.info(f"Creating ReporterCountryCode nodes")
 
+        # session.execute(text("SELECT create_vlabel('fao_graph', 'ReporterCountryCode');"))
+
         for record in records:
             # Build properties string
             props_parts = []
 
-            
             # Always include id first
             props_parts.append(f"id: {record.id}")
             
@@ -42,8 +47,8 @@ class ReporterCountryCodeMigrator(GraphMigrationBase):
                 
                 if isinstance(value, str):
                     # Escape single quotes for Cypher
-                    # value = value.replace("'", "\\'")
-                    props_parts.append(f'reporter_country_code: "{value}"')
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f"reporter_country_code: '{value}'")
                 else:
                     props_parts.append(f"reporter_country_code: {value}")
             if hasattr(record, "reporter_countries") and getattr(record, "reporter_countries") is not None:
@@ -51,8 +56,8 @@ class ReporterCountryCodeMigrator(GraphMigrationBase):
                 
                 if isinstance(value, str):
                     # Escape single quotes for Cypher
-                    # value = value.replace("'", "\\'")
-                    props_parts.append(f'reporter_countries: "{value}"')
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f"reporter_countries: '{value}'")
                 else:
                     props_parts.append(f"reporter_countries: {value}")
             if hasattr(record, "reporter_country_code_m49") and getattr(record, "reporter_country_code_m49") is not None:
@@ -60,8 +65,8 @@ class ReporterCountryCodeMigrator(GraphMigrationBase):
                 
                 if isinstance(value, str):
                     # Escape single quotes for Cypher
-                    # value = value.replace("'", "\\'")
-                    props_parts.append(f'reporter_country_code_m49: "{value}"')
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f"reporter_country_code_m49: '{value}'")
                 else:
                     props_parts.append(f"reporter_country_code_m49: {value}")
             if hasattr(record, "source_dataset") and getattr(record, "source_dataset") is not None:
@@ -69,8 +74,8 @@ class ReporterCountryCodeMigrator(GraphMigrationBase):
                 
                 if isinstance(value, str):
                     # Escape single quotes for Cypher
-                    # value = value.replace("'", "\\'")
-                    props_parts.append(f'source_dataset: "{value}"')
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f"source_dataset: '{value}'")
                 else:
                     props_parts.append(f"source_dataset: {value}")
             

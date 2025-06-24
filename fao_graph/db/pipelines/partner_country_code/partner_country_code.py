@@ -12,8 +12,12 @@ class PartnerCountryCodeMigrator(GraphMigrationBase):
     """Migrator for PartnerCountryCode nodes from partner_country_codes"""
     
     def __init__(self):
-        super().__init__("partner_country_codes", "node", "fao_graph", "PartnerCountryCode")
-        self.node_label = "PartnerCountryCode"
+        super().__init__(
+            "partner_country_codes", 
+            "node", 
+            "fao_graph", 
+            "PartnerCountryCode", 
+        )
     
     def get_migration_query(self) -> str:
         return load_sql("partner_country_code.cypher.sql", Path(__file__).parent)
@@ -29,11 +33,12 @@ class PartnerCountryCodeMigrator(GraphMigrationBase):
 
         logger.info(f"Creating PartnerCountryCode nodes")
 
+        # session.execute(text("SELECT create_vlabel('fao_graph', 'PartnerCountryCode');"))
+
         for record in records:
             # Build properties string
             props_parts = []
 
-            
             # Always include id first
             props_parts.append(f"id: {record.id}")
             
@@ -42,8 +47,8 @@ class PartnerCountryCodeMigrator(GraphMigrationBase):
                 
                 if isinstance(value, str):
                     # Escape single quotes for Cypher
-                    # value = value.replace("'", "\\'")
-                    props_parts.append(f'partner_country_code: "{value}"')
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f"partner_country_code: '{value}'")
                 else:
                     props_parts.append(f"partner_country_code: {value}")
             if hasattr(record, "partner_countries") and getattr(record, "partner_countries") is not None:
@@ -51,8 +56,8 @@ class PartnerCountryCodeMigrator(GraphMigrationBase):
                 
                 if isinstance(value, str):
                     # Escape single quotes for Cypher
-                    # value = value.replace("'", "\\'")
-                    props_parts.append(f'partner_countries: "{value}"')
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f"partner_countries: '{value}'")
                 else:
                     props_parts.append(f"partner_countries: {value}")
             if hasattr(record, "partner_country_code_m49") and getattr(record, "partner_country_code_m49") is not None:
@@ -60,8 +65,8 @@ class PartnerCountryCodeMigrator(GraphMigrationBase):
                 
                 if isinstance(value, str):
                     # Escape single quotes for Cypher
-                    # value = value.replace("'", "\\'")
-                    props_parts.append(f'partner_country_code_m49: "{value}"')
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f"partner_country_code_m49: '{value}'")
                 else:
                     props_parts.append(f"partner_country_code_m49: {value}")
             if hasattr(record, "source_dataset") and getattr(record, "source_dataset") is not None:
@@ -69,8 +74,8 @@ class PartnerCountryCodeMigrator(GraphMigrationBase):
                 
                 if isinstance(value, str):
                     # Escape single quotes for Cypher
-                    # value = value.replace("'", "\\'")
-                    props_parts.append(f'source_dataset: "{value}"')
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f"source_dataset: '{value}'")
                 else:
                     props_parts.append(f"source_dataset: {value}")
             

@@ -12,8 +12,12 @@ class ItemCodeMigrator(GraphMigrationBase):
     """Migrator for ItemCode nodes from item_codes"""
     
     def __init__(self):
-        super().__init__("item_codes", "node", "fao_graph", "ItemCode")
-        self.node_label = "ItemCode"
+        super().__init__(
+            "item_codes", 
+            "node", 
+            "fao_graph", 
+            "ItemCode", 
+        )
     
     def get_migration_query(self) -> str:
         return load_sql("item_code.cypher.sql", Path(__file__).parent)
@@ -29,11 +33,12 @@ class ItemCodeMigrator(GraphMigrationBase):
 
         logger.info(f"Creating ItemCode nodes")
 
+        # session.execute(text("SELECT create_vlabel('fao_graph', 'ItemCode');"))
+
         for record in records:
             # Build properties string
             props_parts = []
 
-            
             # Always include id first
             props_parts.append(f"id: {record.id}")
             
@@ -42,8 +47,8 @@ class ItemCodeMigrator(GraphMigrationBase):
                 
                 if isinstance(value, str):
                     # Escape single quotes for Cypher
-                    # value = value.replace("'", "\\'")
-                    props_parts.append(f'item_code: "{value}"')
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f"item_code: '{value}'")
                 else:
                     props_parts.append(f"item_code: {value}")
             if hasattr(record, "item") and getattr(record, "item") is not None:
@@ -51,8 +56,8 @@ class ItemCodeMigrator(GraphMigrationBase):
                 
                 if isinstance(value, str):
                     # Escape single quotes for Cypher
-                    # value = value.replace("'", "\\'")
-                    props_parts.append(f'item: "{value}"')
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f"item: '{value}'")
                 else:
                     props_parts.append(f"item: {value}")
             if hasattr(record, "item_code_cpc") and getattr(record, "item_code_cpc") is not None:
@@ -60,8 +65,8 @@ class ItemCodeMigrator(GraphMigrationBase):
                 
                 if isinstance(value, str):
                     # Escape single quotes for Cypher
-                    # value = value.replace("'", "\\'")
-                    props_parts.append(f'item_code_cpc: "{value}"')
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f"item_code_cpc: '{value}'")
                 else:
                     props_parts.append(f"item_code_cpc: {value}")
             if hasattr(record, "item_code_fbs") and getattr(record, "item_code_fbs") is not None:
@@ -69,8 +74,8 @@ class ItemCodeMigrator(GraphMigrationBase):
                 
                 if isinstance(value, str):
                     # Escape single quotes for Cypher
-                    # value = value.replace("'", "\\'")
-                    props_parts.append(f'item_code_fbs: "{value}"')
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f"item_code_fbs: '{value}'")
                 else:
                     props_parts.append(f"item_code_fbs: {value}")
             if hasattr(record, "item_code_sdg") and getattr(record, "item_code_sdg") is not None:
@@ -78,8 +83,8 @@ class ItemCodeMigrator(GraphMigrationBase):
                 
                 if isinstance(value, str):
                     # Escape single quotes for Cypher
-                    # value = value.replace("'", "\\'")
-                    props_parts.append(f'item_code_sdg: "{value}"')
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f"item_code_sdg: '{value}'")
                 else:
                     props_parts.append(f"item_code_sdg: {value}")
             if hasattr(record, "source_dataset") and getattr(record, "source_dataset") is not None:
@@ -87,8 +92,8 @@ class ItemCodeMigrator(GraphMigrationBase):
                 
                 if isinstance(value, str):
                     # Escape single quotes for Cypher
-                    # value = value.replace("'", "\\'")
-                    props_parts.append(f'source_dataset: "{value}"')
+                    value = value.replace("'", "\\'")
+                    props_parts.append(f"source_dataset: '{value}'")
                 else:
                     props_parts.append(f"source_dataset: {value}")
             
