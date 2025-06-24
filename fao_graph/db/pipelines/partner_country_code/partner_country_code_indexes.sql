@@ -8,6 +8,14 @@ ON fao_graph."PartnerCountryCode" USING btree (
     agtype_access_operator(VARIADIC ARRAY[properties, '"partner_country_code"'::agtype])
 );
 
+CREATE INDEX IF NOT EXISTS idx_partner_country_codes_sd_trade_detailed_trade_matrix
+ON fao_graph."PartnerCountryCode" USING btree (
+    agtype_access_operator(VARIADIC ARRAY[properties, '"source_dataset"'::agtype])
+)
+WHERE agtype_access_operator(VARIADIC ARRAY[properties, '"source_dataset"'::agtype]) = '"trade_detailed_trade_matrix"'::agtype;
+
+
+
 -- Compound index for node lookups
 CREATE INDEX IF NOT EXISTS idx_partner_country_codes_properties
 ON fao_graph."PartnerCountryCode" USING GIN (properties);
